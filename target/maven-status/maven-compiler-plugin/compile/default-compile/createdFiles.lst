@@ -1,0 +1,16 @@
+fr\mismo\demo_web_addin\controller\RootController.class
+fr\mismo\demo_web_addin\repository\DemandeRepository.class
+fr\mismo\demo_web_addin\model\Demande.class
+fr\mismo\demo_web_addin\config\CorsConfig.class
+fr\mismo\demo_web_addin\DemoWebAddinApplication.class
+fr\mismo\demo_web_addin\repository\InterlocuteurRepository.class
+fr\mismo\demo_web_addin\repository\PieceJointeRepository.class
+fr\mismo\demo_web_addin\dto\ApiResponse.class
+fr\mismo\demo_web_addin\model\Interlocuteur.class
+fr\mismo\demo_web_addin\DemoWebAddinApplication$AtheneoApplication.class
+fr\mismo\demo_web_addin\model\PieceJointe.class
+fr\mismo\demo_web_addin\controller\AtheneoController.class
+fr\mismo\demo_web_addin\repository\ActionRepository.class
+fr\mismo\demo_web_addin\model\Action.class
+fr\mismo\demo_web_addin\model\Email.class
+fr\mismo\demo_web_addin\repository\EmailRepository.class
