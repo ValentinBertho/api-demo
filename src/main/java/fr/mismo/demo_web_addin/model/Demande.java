@@ -20,7 +20,7 @@ public class Demande {
     private String contactNom;
     private String titre;
 
-    @Column(length = 5000)
+    @Column(columnDefinition = "VARCHAR")
     private String description;
 
     private String statut = "nouvelle";
