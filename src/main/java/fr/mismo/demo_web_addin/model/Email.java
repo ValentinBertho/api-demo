@@ -15,7 +15,7 @@ public class Email {
     private String expediteurNom;
     private String sujet;
 
-    @Column(length = 5000)
+    @Column(columnDefinition = "VARCHAR")
     private String contenu;
 
     private LocalDateTime dateReception;
