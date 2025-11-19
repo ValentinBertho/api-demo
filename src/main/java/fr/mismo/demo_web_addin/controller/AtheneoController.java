@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -56,25 +57,28 @@ public class AtheneoController {
 
         try {
             Email email = new Email();
+
             email.setExpediteur((String) request.get("from"));
             email.setExpediteurNom((String) request.get("fromName"));
             email.setSujet((String) request.get("subject"));
             email.setContenu((String) request.get("body"));
-            email.setDateReception(LocalDateTime.parse((String) request.get("date")));
+
+            // Correction parsing date ISO 8601 avec Z
+            String dateStr = (String) request.get("date");
+            OffsetDateTime odt = OffsetDateTime.parse(dateStr);
+            email.setDateReception(odt.toLocalDateTime());
 
             Email saved = emailRepository.save(email);
 
             log.info("✅ Email enregistré avec ID: {}", saved.getId());
-            return ResponseEntity.ok(
-                    ApiResponse.success("Mail enregistré avec succès", saved)
-            );
+            return ResponseEntity.ok(ApiResponse.success("Mail enregistré avec succès", saved));
+
         } catch (Exception e) {
             log.error("❌ Erreur enregistrement mail", e);
-            return ResponseEntity.badRequest().body(
-                    ApiResponse.error("Erreur: " + e.getMessage())
-            );
+            return ResponseEntity.badRequest().body(ApiResponse.error("Erreur: " + e.getMessage()));
         }
     }
+
 
     @GetMapping("/mails")
     public ResponseEntity<List<Email>> listerMails() {
