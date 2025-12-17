@@ -13,14 +13,20 @@ GO
 SET ANSI_NULLS ON
 GO
 
-CREATE PROCEDURE SP_ATHENEO_RECHERCHER_INTERLOCUTEUR
-    @EMAIL VARCHAR(255)
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    -- TODO: Implémenter la recherche d'interlocuteur par email
-    -- Retourner les informations de l'interlocuteur si trouvé
-
-END
-GO
+CREATE PROCEDURE SP_ATHENEO_RECHERCHER_INTERLOCUTEUR(
+    IN EMAIL VARCHAR(255)
+)
+LANGUAGE SQL
+READS SQL DATA
+AS $$
+    SELECT
+        ID AS INTERLOCUTEUR_ID,
+        EMAIL,
+        PRENOM,
+        NOM,
+        TELEPHONE,
+        SOCIETE,
+        DATE_CREATION
+    FROM INTERLOCUTEUR
+    WHERE LOWER(INTERLOCUTEUR.EMAIL) = LOWER(EMAIL);
+$$;
