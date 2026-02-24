@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATHENEO Integration</title>
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --primary-light: #a78bfa;
+            --accent: #ec4899;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            
+            --bg-dark: #1e1b4b;
+            --bg-darker: #18153a;
+            --bg-light: #2d2654;
+            --surface: #312c5c;
+            --surface-hover: #3d3770;
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            
+            --border: #4c4178;
+            --border-light: #5e538f;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-darker);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 100%;
+            background: var(--bg-dark);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-light) 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 24px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: 0.5px;
+        }
+
+        /* Section contexte email */
+        .email-context {
+            background: var(--bg-light);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+        }
+
+        .context-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            padding: 4px 0;
+        }
+
+        .context-toggle:hover {
+            opacity: 0.8;
+        }
+
+        .context-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .context-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            background: var(--surface);
+            color: var(--primary-light);
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid var(--border);
+        }
+
+        .context-arrow {
+            font-size: 18px;
+            color: var(--text-muted);
+            transition: transform 0.2s;
+        }
+
+        .context-arrow.open {
+            transform: rotate(180deg);
+        }
+
+        .context-details {
+            margin-top: 12px;
+            display: none;
+            animation: slideDown 0.2s ease;
+        }
+
+        .context-details.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .context-item {
+            padding: 10px 0;
+            font-size: 13px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .context-item:last-child {
+            border-bottom: none;
+        }
+
+        .context-label {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .context-value {
+            color: var(--text-primary);
+            word-break: break-word;
+        }
+
+        /* Messages de statut */
+        .status {
+            margin: 16px 24px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+            align-items: flex-start;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+            border: 1px solid;
+        }
+
+        .status.show {
+            display: flex;
+        }
+
+        .status-icon {
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        .status.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #6ee7b7;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .status.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #fca5a5;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .status.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #fcd34d;
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Actions */
+        .actions {
+            padding: 24px;
+        }
+
+        .actions-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 16px;
+        }
+
+        .action-button {
+            width: 100%;
+            padding: 14px 18px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--surface);
+            color: var(--text-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .action-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .action-button:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: var(--surface-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.2);
+        }
+
+        .action-button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .action-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .action-button:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .action-button.primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .action-button.primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--primary-hover) 0%, #db2777 100%);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .button-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .button-text {
+            flex: 1;
+            text-align: left;
+            position: relative;
+            z-index: 1;
+        }
+
+        .button-description {
+            font-size: 11px;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+            font-weight: 400;
+        }
+
+        .loader {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: currentColor;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            padding: 6px 12px;
+            background: var(--bg-darker);
+            color: var(--text-primary);
+            font-size: 12px;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s, transform 0.2s;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-4px);
+        }
+
+        /* Badge de notification */
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--error);
+            color: white;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: 600;
+            min-width: 18px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Stats rapides */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding: 16px 24px;
+            background: var(--bg-light);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stat-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .stat-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(139, 92, 246, 0.2);
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-light);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        /* Section collapsible améliorée */
+        .section-collapsible {
+            margin: 16px 24px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--surface);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .section-header:hover {
+            background: var(--surface-hover);
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding: 0 16px;
+        }
+
+        .section-content.expanded {
+            max-height: 500px;
+            padding: 16px;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            background: var(--bg-darker);
+            text-align: center;
+        }
+
+        .api-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+            padding: 6px 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 8px var(--success);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">A</div>
+                <h1>ATHENEO</h1>
+            </div>
+        </div>
+
+        <!-- Contexte email -->
+        <div class="email-context">
+            <div class="context-toggle" onclick="toggleContext()">
+                <div class="context-title">
+                    <span>Contexte du mail</span>
+                    <span class="context-badge">
+                        📎 <span id="attachmentsBadge">0</span>
+                    </span>
+                </div>
+                <span class="context-arrow" id="contextArrow">▼</span>
+            </div>
+            <div class="context-details" id="contextDetails">
+                <div class="context-item">
+                    <div class="context-label">De</div>
+                    <div class="context-value" id="emailFrom">Chargement...</div>
+                </div>
+                <div class="context-item">
+                    <div class="context-label">Sujet</div>
+                    <div class="context-value" id="emailSubject">Chargement...</div>
+                </div>
+                <div class="context-item">
+                    <div class="context-label">Pièces jointes</div>
+                    <div class="context-value" id="attachmentsDetails">Chargement...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages de statut -->
+        <div id="statusMessage" class="status">
+            <span class="status-icon" id="statusIcon"></span>
+            <span id="statusText"></span>
+        </div>
+
+        <!-- Stats rapides -->
+        <div class="quick-stats" id="quickStats" style="display: none;">
+            <div class="stat-item tooltip" data-tooltip="Mails enregistrés aujourd'hui">
+                <span class="stat-value" id="statMails">0</span>
+                <span class="stat-label">Mails</span>
+            </div>
+            <div class="stat-item tooltip" data-tooltip="Demandes créées ce mois">
+                <span class="stat-value" id="statRequests">0</span>
+                <span class="stat-label">Demandes</span>
+            </div>
+            <div class="stat-item tooltip" data-tooltip="Actions en cours">
+                <span class="stat-value" id="statActions">0</span>
+                <span class="stat-label">Actions</span>
+            </div>
+        </div>
+
+        <!-- Actions principales -->
+        <div class="actions">
+            <div class="actions-title">Actions disponibles</div>
+
+            <button class="action-button primary tooltip" data-tooltip="Sauvegarder ce mail dans ATHENEO" onclick="saveMail()">
+                <span class="button-icon">💾</span>
+                <span class="button-text">
+                    Enregistrer le mail
+                    <span class="button-description">Archiver dans la base ATHENEO</span>
+                </span>
+            </button>
+
+            <button class="action-button tooltip" data-tooltip="Créer une nouvelle demande client" onclick="createRequest()">
+                <span class="button-icon">📋</span>
+                <span class="button-text">
+                    Créer une demande
+                    <span class="button-description">Générer une demande avec référence</span>
+                </span>
+            </button>
+
+            <button class="action-button tooltip" data-tooltip="Voir la fiche contact de l'expéditeur" onclick="viewContact()">
+                <span class="button-icon">👤</span>
+                <span class="button-text">
+                    Consulter le contact
+                    <span class="button-description">Ouvrir la fiche interlocuteur</span>
+                </span>
+            </button>
+
+            <button class="action-button tooltip" data-tooltip="Enregistrer toutes les pièces jointes" onclick="saveAttachments()" id="attachmentsButton">
+                <span class="button-icon">📎</span>
+                <span class="button-text">
+                    Sauvegarder les pièces jointes
+                    <span class="button-description">Archiver les documents attachés</span>
+                </span>
+            </button>
+
+            <button class="action-button tooltip" data-tooltip="Créer une tâche de suivi dans ATHENEO" onclick="createAction()">
+                <span class="button-icon">✓</span>
+                <span class="button-text">
+                    Créer une action de suivi
+                    <span class="button-description">Planifier une action ultérieure</span>
+                </span>
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="api-status">
+                <span class="status-dot"></span>
+                <span>API connectée</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let mailboxItem;
+        let senderEmail;
+        let senderName;
+        let mailSubject;
+        let mailBody;
+        let attachments = [];
+        let contextOpen = false;
+
+        // ============================================
+        // CONFIGURATION API
+        // ============================================
+        
+        const ATHENEO_API_URL = 'https://api-demo-production-8637.up.railway.app/atheneo/api';
+        const API_KEY = 'VotreCleAPISecrete123';
+
+        // ============================================
+        // INITIALISATION
+        // ============================================
+        
+        Office.onReady((info) => {
+            if (info.host === Office.HostType.Outlook) {
+                mailboxItem = Office.context.mailbox.item;
+                loadEmailData();
+            }
+        });
+
+			async function loadEmailData() {
+				try {
+					// -----------------------
+					// RÉCUPÉRATION EXPÉDITEUR
+					// -----------------------
+					const from = mailboxItem.from;
+
+					if (from) {
+						senderEmail = from.emailAddress || "(inconnu)";
+						senderName = from.displayName || "(inconnu)";
+						
+						document.getElementById('emailFrom').innerHTML = 
+							`<strong>${senderName}</strong><br><span style="font-size: 12px; color: var(--text-muted);">${senderEmail}</span>`;
+					} else {
+						document.getElementById('emailFrom').textContent = "Expéditeur introuvable";
+					}
+
+					// -----------------------
+					// SUJET (synchrone)
+					// -----------------------
+					mailSubject = mailboxItem.subject || "(Aucun sujet)";
+					document.getElementById('emailSubject').textContent = mailSubject;
+
+					// -----------------------
+					// CORPS DU MAIL (ASYNC)
+					// -----------------------
+					const bodyResult = await new Promise(resolve => {
+						mailboxItem.body.getAsync(Office.CoercionType.Html, resolve);
+					});
+
+					if (bodyResult.status === Office.AsyncResultStatus.Succeeded) {
+						mailBody = bodyResult.value;
+					}
+
+					// -----------------------
+					// PIÈCES JOINTES
+					// -----------------------
+					attachments = mailboxItem.attachments || [];
+					updateAttachmentsDisplay();
+
+					console.log("Données e-mail chargées :", {
+						from: senderEmail,
+						name: senderName,
+						subject: mailSubject,
+						bodyLength: mailBody?.length ?? 0,
+						attachments: attachments.length
+					});
+
+				} catch (error) {
+					console.error("Erreur loadEmailData():", error);
+					showStatus("Erreur lors du chargement des données", "error");
+				}
+			}
+
+
+        function updateAttachmentsDisplay() {
+            const count = attachments.length;
+
+            // Badge dans le titre
+            document.getElementById('attachmentsBadge').textContent = count;
+
+            // Désactiver/activer le bouton de sauvegarde
+            const attachButton = document.getElementById('attachmentsButton');
+            if (attachButton) {
+                attachButton.disabled = count === 0;
+                if (count > 0) {
+                    attachButton.classList.add('has-attachments');
+                }
+            }
+
+            // Détails des pièces jointes
+            if (count === 0) {
+                document.getElementById('attachmentsDetails').textContent = 'Aucune pièce jointe';
+            } else {
+                const filesText = attachments.map(att =>
+                    `📄 ${att.name} (${formatFileSize(att.size)})`
+                ).join('<br>');
+                document.getElementById('attachmentsDetails').innerHTML = filesText;
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        // ============================================
+        // GESTION DE L'INTERFACE
+        // ============================================
+        
+        function toggleContext() {
+            contextOpen = !contextOpen;
+            const details = document.getElementById('contextDetails');
+            const arrow = document.getElementById('contextArrow');
+            
+            if (contextOpen) {
+                details.classList.add('show');
+                arrow.classList.add('open');
+            } else {
+                details.classList.remove('show');
+                arrow.classList.remove('open');
+            }
+        }
+
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('statusMessage');
+            const statusIcon = document.getElementById('statusIcon');
+            const statusText = document.getElementById('statusText');
+            
+            const icons = {
+                success: '✓',
+                error: '✕',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+            
+            statusIcon.textContent = icons[type] || icons.info;
+            statusText.textContent = message;
+            statusDiv.className = `status show ${type}`;
+            
+            setTimeout(() => {
+                statusDiv.classList.remove('show');
+            }, 5000);
+        }
+
+        function showLoader(button) {
+            button.disabled = true;
+            const originalHTML = button.innerHTML;
+            button.innerHTML = '<span class="loader"></span><span style="margin-left: 8px;">Traitement...</span>';
+            return originalHTML;
+        }
+
+        function hideLoader(button, originalHTML) {
+            button.disabled = false;
+            button.innerHTML = originalHTML;
+        }
+
+        // ============================================
+        // APPELS API VERS SPRING BOOT
+        // ============================================
+
+        async function callAtheneoAPI(endpoint, method, data, retries = 2) {
+            let lastError;
+
+            for (let attempt = 0; attempt <= retries; attempt++) {
+                try {
+                    console.log(`API Call [Attempt ${attempt + 1}/${retries + 1}]: ${method} ${endpoint}`);
+                    console.log('Data:', data);
+
+                    const options = {
+                        method: method,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${API_KEY}`
+                        },
+                        timeout: 10000
+                    };
+
+                    if (data && method !== 'GET') {
+                        options.body = JSON.stringify(data);
+                    }
+
+                    const response = await fetch(`${ATHENEO_API_URL}${endpoint}`, options);
+
+                    console.log('Response status:', response.status);
+
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(`HTTP ${response.status}: ${errorText || 'Erreur API'}`);
+                    }
+
+                    const result = await response.json();
+                    console.log('Response:', result);
+
+                    return result;
+                } catch (error) {
+                    console.error(`API Error (attempt ${attempt + 1}):`, error);
+                    lastError = error;
+
+                    // Retry only for network errors, not for 4xx errors
+                    if (attempt < retries && !error.message.includes('HTTP 4')) {
+                        console.log(`Retrying in ${(attempt + 1) * 1000}ms...`);
+                        await new Promise(resolve => setTimeout(resolve, (attempt + 1) * 1000));
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            throw lastError;
+        }
+
+        // Validation des données
+        function validateEmailData() {
+            const errors = [];
+
+            if (!senderEmail || !senderEmail.includes('@')) {
+                errors.push('Email expéditeur invalide');
+            }
+
+            if (!mailSubject || mailSubject.trim() === '') {
+                errors.push('Sujet du mail manquant');
+            }
+
+            return errors;
+        }
+
+        // ============================================
+        // ACTIONS
+        // ============================================
+        
+        async function saveMail() {
+            const button = event.target.closest('button');
+
+            // Validation
+            const errors = validateEmailData();
+            if (errors.length > 0) {
+                showStatus(`Validation échouée: ${errors.join(', ')}`, 'error');
+                return;
+            }
+
+            const originalHTML = showLoader(button);
+
+            try {
+                const result = await callAtheneoAPI('/mails', 'POST', {
+                    from: senderEmail,
+                    fromName: senderName,
+                    subject: mailSubject,
+                    body: mailBody,
+                    date: mailboxItem.dateTimeCreated.toISOString(),
+                    messageId: mailboxItem.itemId
+                });
+
+                if (result.success) {
+                    showStatus(`✓ Mail enregistré avec succès (ID: ${result.data.id})`, 'success');
+                } else {
+                    showStatus(result.message || 'Échec de l\'enregistrement', 'error');
+                }
+            } catch (error) {
+                console.error('Error in saveMail:', error);
+                showStatus(`✕ Erreur: ${error.message || 'Impossible d\'enregistrer le mail'}`, 'error');
+            } finally {
+                hideLoader(button, originalHTML);
+            }
+        }
+
+        async function createRequest() {
+            const button = event.target.closest('button');
+
+            // Validation
+            const errors = validateEmailData();
+            if (errors.length > 0) {
+                showStatus(`Validation échouée: ${errors.join(', ')}`, 'error');
+                return;
+            }
+
+            const originalHTML = showLoader(button);
+
+            try {
+                const result = await callAtheneoAPI('/demandes', 'POST', {
+                    email: senderEmail,
+                    contactName: senderName,
+                    subject: mailSubject,
+                    description: mailBody,
+                    source: 'outlook_addin',
+                    priority: 'normale',
+                    type: 'email'
+                });
+
+                if (result.success) {
+                    showStatus(`✓ Demande créée avec succès: ${result.data.reference}`, 'success');
+                } else {
+                    showStatus(result.message || 'Échec de la création', 'error');
+                }
+            } catch (error) {
+                console.error('Error in createRequest:', error);
+                showStatus(`✕ Erreur: ${error.message || 'Impossible de créer la demande'}`, 'error');
+            } finally {
+                hideLoader(button, originalHTML);
+            }
+        }
+
+        async function viewContact() {
+            const button = event.target.closest('button');
+
+            if (!senderEmail || !senderEmail.includes('@')) {
+                showStatus('Email expéditeur invalide', 'error');
+                return;
+            }
+
+            const originalHTML = showLoader(button);
+
+            try {
+                const result = await callAtheneoAPI(
+                    `/interlocuteurs?email=${encodeURIComponent(senderEmail)}`,
+                    'GET'
+                );
+
+                if (result.success && result.data) {
+                    const url = `${ATHENEO_API_URL.replace('/api', '')}/interlocuteurs/${result.data.id}`;
+                    window.open(url, '_blank');
+                    showStatus(`✓ Fiche de ${result.data.nom} ${result.data.prenom} ouverte`, 'success');
+                } else {
+                    showStatus('⚠ Contact non trouvé dans ATHENEO', 'warning');
+                }
+            } catch (error) {
+                console.error('Error in viewContact:', error);
+                showStatus(`✕ Erreur: ${error.message || 'Impossible de consulter le contact'}`, 'error');
+            } finally {
+                hideLoader(button, originalHTML);
+            }
+        }
+
+        async function saveAttachments() {
+            const button = event.target.closest('button');
+
+            if (attachments.length === 0) {
+                showStatus('⚠ Aucune pièce jointe à enregistrer', 'warning');
+                return;
+            }
+
+            const originalHTML = showLoader(button);
+
+            try {
+                const result = await callAtheneoAPI('/pieces-jointes', 'POST', {
+                    attachments: attachments.map(att => ({
+                        name: att.name,
+                        size: att.size,
+                        contentType: att.contentType,
+                        id: att.id,
+                        isInline: att.isInline || false
+                    })),
+                    emailFrom: senderEmail,
+                    emailSubject: mailSubject,
+                    source: 'outlook_addin'
+                });
+
+                if (result.success) {
+                    showStatus(`✓ ${attachments.length} pièce(s) jointe(s) enregistrée(s) avec succès`, 'success');
+                } else {
+                    showStatus(result.message || 'Échec de l\'enregistrement', 'error');
+                }
+            } catch (error) {
+                console.error('Error in saveAttachments:', error);
+                showStatus(`✕ Erreur: ${error.message || 'Impossible d\'enregistrer les pièces jointes'}`, 'error');
+            } finally {
+                hideLoader(button, originalHTML);
+            }
+        }
+
+        async function createAction() {
+            const button = event.target.closest('button');
+
+            // Validation
+            const errors = validateEmailData();
+            if (errors.length > 0) {
+                showStatus(`Validation échouée: ${errors.join(', ')}`, 'error');
+                return;
+            }
+
+            const originalHTML = showLoader(button);
+
+            try {
+                const result = await callAtheneoAPI('/actions', 'POST', {
+                    email: senderEmail,
+                    contactName: senderName,
+                    title: `Suivi: ${mailSubject}`,
+                    description: mailBody,
+                    type: 'email_follow_up',
+                    priority: 'normale',
+                    status: 'a_faire',
+                    source: 'outlook_addin',
+                    dueDate: null
+                });
+
+                if (result.success) {
+                    showStatus(`✓ Action créée avec succès: ${result.data.reference}`, 'success');
+                } else {
+                    showStatus(result.message || 'Échec de la création', 'error');
+                }
+            } catch (error) {
+                console.error('Error in createAction:', error);
+                showStatus(`✕ Erreur: ${error.message || 'Impossible de créer l\'action'}`, 'error');
+            } finally {
+                hideLoader(button, originalHTML);
+            }
+        }
+    </script>
+</body>
+</html>

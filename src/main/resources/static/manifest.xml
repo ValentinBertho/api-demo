@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+           xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0"
+           xsi:type="MailApp">
+
+  <!-- GUID unique - Générer un nouveau sur https://www.guidgenerator.com/ -->
+  <Id>d4f5e6a7-8b9c-0d1e-2f3a-4b5c6d7e8f9a</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Votre Entreprise</ProviderName>
+  <DefaultLocale>fr-FR</DefaultLocale>
+
+  <!-- Informations d'affichage -->
+  <DisplayName DefaultValue="ATHENEO"/>
+  <Description DefaultValue="Intégration avec l'ERP ATHENEO - Gestion des mails, demandes, contacts et actions"/>
+
+  <!-- Icônes - tous dans /assets/ -->
+  <IconUrl DefaultValue="https://api-demo-production-3184.up.railway.app/atheneo/assets/icon-32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://api-demo-production-3184.up.railway.app/atheneo/assets/icon-80.png"/>
+
+  <!-- URL de support -->
+  <SupportUrl DefaultValue="https://api-demo-production-3184.up.railway.app"/>
+
+  <!-- Domaines autorisés -->
+  <AppDomains>
+    <AppDomain>https://api-demo-production-3184.up.railway.app</AppDomain>
+  </AppDomains>
+
+  <!-- Hôte Outlook -->
+  <Hosts>
+    <Host Name="Mailbox"/>
+  </Hosts>
+
+  <!-- Configuration minimale requise -->
+  <Requirements>
+    <Sets>
+      <Set Name="Mailbox" MinVersion="1.5"/>
+    </Sets>
+  </Requirements>
+
+  <!-- Configuration du formulaire -->
+  <FormSettings>
+    <Form xsi:type="ItemRead">
+      <DesktopSettings>
+        <SourceLocation DefaultValue="https://api-demo-production-3184.up.railway.app/atheneo/taskpane.html"/>
+        <RequestedHeight>250</RequestedHeight>
+      </DesktopSettings>
+    </Form>
+  </FormSettings>
+
+  <!-- Permissions requises -->
+  <Permissions>ReadWriteMailbox</Permissions>
+
+  <!-- Règle d'activation -->
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read"/>
+  </Rule>
+
+  <!-- VersionOverrides pour interface moderne -->
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
+
+    <Requirements>
+      <bt:Sets DefaultMinVersion="1.5">
+        <bt:Set Name="Mailbox"/>
+      </bt:Sets>
+    </Requirements>
+
+    <Hosts>
+      <Host xsi:type="MailHost">
+
+        <!-- Interface Desktop/Web -->
+        <DesktopFormFactor>
+
+          <!-- Fichier de commandes -->
+          <FunctionFile resid="Commands.Url"/>
+
+          <!-- Point d'extension : Lecture de message -->
+          <ExtensionPoint xsi:type="MessageReadCommandSurface">
+            <OfficeTab id="TabDefault">
+              <Group id="atheneoGroup">
+                <Label resid="GroupLabel"/>
+
+                <!-- Bouton principal -->
+                <Control xsi:type="Button" id="atheneoTaskpaneButton">
+                  <Label resid="TaskpaneButton.Label"/>
+                  <Supertip>
+                    <Title resid="TaskpaneButton.Label"/>
+                    <Description resid="TaskpaneButton.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16"/>
+                    <bt:Image size="32" resid="Icon.32x32"/>
+                    <bt:Image size="80" resid="Icon.80x80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="Taskpane.Url"/>
+                  </Action>
+                </Control>
+
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+
+        </DesktopFormFactor>
+
+      </Host>
+    </Hosts>
+
+    <!-- Ressources : Images, URLs et Textes -->
+    <Resources>
+
+      <!-- Images (icônes) -->
+      <bt:Images>
+        <bt:Image id="Icon.16x16" DefaultValue="https://api-demo-production-3184.up.railway.app/atheneo/assets/icon-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://api-demo-production-3184.up.railway.app/atheneo/assets/icon-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://api-demo-production-3184.up.railway.app/atheneo/assets/icon-80.png"/>
+      </bt:Images>
+
+      <!-- URLs des pages -->
+      <bt:Urls>
+        <bt:Url id="Commands.Url" DefaultValue="https://api-demo-production-3184.up.railway.app/atheneo/commands.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://api-demo-production-3184.up.railway.app/atheneo/taskpane.html"/>
+      </bt:Urls>
+
+      <!-- Textes courts -->
+      <bt:ShortStrings>
+        <bt:String id="GroupLabel" DefaultValue="ATHENEO"/>
+        <bt:String id="TaskpaneButton.Label" DefaultValue="ATHENEO"/>
+      </bt:ShortStrings>
+
+      <!-- Textes longs (tooltips) -->
+      <bt:LongStrings>
+        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Ouvrir le panneau ATHENEO pour enregistrer le mail, créer des demandes, consulter les contacts et gérer les actions"/>
+        <bt:String id="ComposeButton.Tooltip" DefaultValue="Accéder aux fonctionnalités ATHENEO pendant la rédaction d'un mail"/>
+      </bt:LongStrings>
+
+    </Resources>
+
+  </VersionOverrides>
+
+</OfficeApp>
