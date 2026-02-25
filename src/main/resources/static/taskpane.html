@@ -633,7 +633,7 @@
         // CONFIGURATION API
         // ============================================
         
-        const ATHENEO_API_URL = 'https://api-demo-production-8637.up.railway.app/atheneo/api';
+        const ATHENEO_API_URL = 'https://api-demo-production-3184.up.railway.app/atheneo/api';
         const API_KEY = 'VotreCleAPISecrete123';
 
         // ============================================
@@ -949,7 +949,7 @@
                 );
 
                 if (result.success && result.data) {
-                    const url = `${ATHENEO_API_URL.replace('/api', '')}/interlocuteurs/${result.data.id}`;
+                    const url = `/atheneo/interlocuteurs/${result.data.id}`;
                     window.open(url, '_blank');
                     showStatus(`✓ Fiche de ${result.data.nom} ${result.data.prenom} ouverte`, 'success');
                 } else {
