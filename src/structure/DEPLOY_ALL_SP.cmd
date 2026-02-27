@@ -1,161 +1,252 @@
 @ECHO OFF
 SETLOCAL ENABLEDELAYEDEXPANSION
+CHCP 1252 >NUL
 
-REM ========================================================================
-REM  ATHENEO Outlook Add-in - Script de deploiement des procedures stockees
-REM  Version : 001
-REM  Auteur  : VABE - 26/02/2026
-REM
-REM  Usage :
-REM    DEPLOY_ALL_SP.cmd [SERVEUR] [BASE] [UTILISATEUR] [MOT_DE_PASSE]
-REM
-REM  Exemples :
-REM    DEPLOY_ALL_SP.cmd                          -> Authentification Windows, serveur local
-REM    DEPLOY_ALL_SP.cmd MONSRV ATHENEO           -> Auth Windows sur serveur MONSRV, base ATHENEO
-REM    DEPLOY_ALL_SP.cmd MONSRV ATHENEO sa MonMdp -> Auth SQL sur MONSRV
-REM
-REM  Ce script est idempotent : les procedures existantes sont
-REM  supprimees puis recrees (DROP / CREATE normalise ATHENEO).
-REM ========================================================================
+:: ================================================================================
+:: ATHENEO - Script maitre de deploiement des procedures stockees Outlook Add-in
+:: Version  : 002
+:: Auteur   : VABE
+:: Date     : 26/02/2026
+::
+:: Description :
+::   Deploie en sequence toutes les procedures stockees SP_ATHENEO_*
+::   sur la base SQL Server de production ATHENEO ERP.
+::   Le script est idempotent : chaque procedure est droppee puis recree.
+::   Un fichier de log horodate est genere a chaque execution.
+::
+:: Usage :
+::   DEPLOY_ALL_SP.cmd                    -> connexion avec les parametres par defaut
+::   DEPLOY_ALL_SP.cmd SERVEUR BASE       -> surcharge serveur et base
+::   DEPLOY_ALL_SP.cmd SERVEUR BASE U MDP -> surcharge + auth SQL explicite
+::
+:: Parametres par defaut (pre-configures pour ATHENEO ERP V17) :
+::   Serveur : NA-ATHERP\SQL2022
+::   Base    : ATH_ERP_V17_1
+::   User    : atheneo_sql
+::   Mdp     : M@ster2016
+:: ================================================================================
 
-REM --- Parametres de connexion (arguments optionnels) ---
-SET "SQL_SERVER=%~1"
-SET "SQL_BASE=%~2"
-SET "SQL_USER=%~3"
-SET "SQL_PASS=%~4"
+:: ---------------------------------------------------------------
+:: PARAMETRES PAR DEFAUT (production ATHENEO ERP)
+:: ---------------------------------------------------------------
+SET "_SRV_DEFAULT=NA-ATHERP\SQL2022"
+SET "_BDD_DEFAULT=ATH_ERP_V17_1"
+SET "_USR_DEFAULT=atheneo_sql"
+SET "_MDP_DEFAULT=M@ster2016"
 
-IF "%SQL_SERVER%"=="" SET "SQL_SERVER=(local)"
-IF "%SQL_BASE%"==""   SET "SQL_BASE=ATHENEO"
+:: ---------------------------------------------------------------
+:: SURCHARGE PAR ARGUMENTS (optionnelle)
+:: ---------------------------------------------------------------
+IF NOT "%~1"=="" (SET "SQL_SERVER=%~1") ELSE (SET "SQL_SERVER=%_SRV_DEFAULT%")
+IF NOT "%~2"=="" (SET "SQL_BASE=%~2")   ELSE (SET "SQL_BASE=%_BDD_DEFAULT%")
+IF NOT "%~3"=="" (SET "SQL_USER=%~3")   ELSE (SET "SQL_USER=%_USR_DEFAULT%")
+IF NOT "%~4"=="" (SET "SQL_PASS=%~4")   ELSE (SET "SQL_PASS=%_MDP_DEFAULT%")
 
-REM --- Dossier des scripts SQL (meme dossier que ce .cmd) ---
+:: ---------------------------------------------------------------
+:: CHEMINS ET FICHIER DE LOG
+:: ---------------------------------------------------------------
 SET "SCRIPT_DIR=%~dp0"
+SET "_D=%DATE:~6,4%%DATE:~3,2%%DATE:~0,2%"
+SET "_T=%TIME:~0,2%%TIME:~3,2%%TIME:~6,2%"
+SET "_T=%_T: =0%"
+SET "LOGFILE=%SCRIPT_DIR%logs\DEPLOY_%_D%_%_T%.log"
 
-REM --- Fichier de log horodate ---
-SET "LOGFILE=%SCRIPT_DIR%deploy_%DATE:~6,4%%DATE:~3,2%%DATE:~0,2%_%TIME:~0,2%%TIME:~3,2%%TIME:~6,2%.log"
-SET "LOGFILE=%LOGFILE: =0%"
+IF NOT EXIST "%SCRIPT_DIR%logs\" MKDIR "%SCRIPT_DIR%logs\"
 
-REM --- Couleurs console (via ANSI si disponible) ---
-SET "OK=[OK]"
-SET "KO=[ERREUR]"
+:: ---------------------------------------------------------------
+:: COMPTEURS
+:: ---------------------------------------------------------------
+SET /A CNT_OK=0
+SET /A CNT_KO=0
+SET /A CNT_TOTAL=0
 
-ECHO ========================================================================  >> "%LOGFILE%"
-ECHO  ATHENEO Outlook Add-in - Deploiement procedures stockees                 >> "%LOGFILE%"
-ECHO  Serveur  : %SQL_SERVER%                                                  >> "%LOGFILE%"
-ECHO  Base     : %SQL_BASE%                                                    >> "%LOGFILE%"
-ECHO  Date     : %DATE% %TIME%                                                 >> "%LOGFILE%"
-ECHO ========================================================================  >> "%LOGFILE%"
+:: ---------------------------------------------------------------
+:: TIMER DE DEBUT
+:: ---------------------------------------------------------------
+SET "TIME_START=%TIME%"
 
+:: ================================================================
+:: BANNIERE
+:: ================================================================
+CALL :PRINT_SEP "="
 ECHO.
-ECHO  ========================================================
-ECHO   ATHENEO Outlook Add-in - Deploiement procedures stockees
-ECHO   Serveur : %SQL_SERVER%   Base : %SQL_BASE%
-ECHO  ========================================================
+ECHO    ATHENEO ERP - Deploiement Procedures Stockees Outlook Add-in
 ECHO.
-
-REM --- Construction de la chaine de connexion SQLCMD ---
-IF "%SQL_USER%"=="" (
-    SET "SQLCMD_AUTH=-E"
-    ECHO  Mode authentification : Windows (Trusted)
-) ELSE (
-    SET "SQLCMD_AUTH=-U %SQL_USER% -P %SQL_PASS%"
-    ECHO  Mode authentification : SQL Server (utilisateur %SQL_USER%)
-)
+CALL :PRINT_SEP "="
 ECHO.
+ECHO    Serveur  : %SQL_SERVER%
+ECHO    Base     : %SQL_BASE%
+ECHO    User     : %SQL_USER%
+ECHO    Date     : %DATE%  %TIME%
+ECHO    Log      : %LOGFILE%
+ECHO.
+CALL :PRINT_SEP "-"
 
-REM --- Verification de la presence de sqlcmd ---
-WHERE sqlcmd >nul 2>&1
+:: ================================================================
+:: EN-TETE DU LOG
+:: ================================================================
+CALL :LOG "================================================================"
+CALL :LOG " ATHENEO - Deploiement Procedures Stockees Outlook Add-in"
+CALL :LOG " Serveur  : %SQL_SERVER%"
+CALL :LOG " Base     : %SQL_BASE%"
+CALL :LOG " User     : %SQL_USER%"
+CALL :LOG " Debut    : %DATE% %TIME%"
+CALL :LOG "================================================================"
+
+:: ================================================================
+:: VERIFICATION : sqlcmd disponible
+:: ================================================================
+WHERE sqlcmd >NUL 2>&1
 IF ERRORLEVEL 1 (
-    ECHO %KO% sqlcmd introuvable. Verifiez l'installation de SQL Server Client Tools.
-    ECHO %KO% sqlcmd introuvable >> "%LOGFILE%"
-    PAUSE
-    EXIT /B 1
+    CALL :PRINT_KO "sqlcmd introuvable - installez SQL Server Client Tools"
+    CALL :LOG "[FATAL] sqlcmd introuvable"
+    GOTO :ERREUR_FATALE
 )
 
-REM --- Verification de la connexion a la base ---
-ECHO  Test de connexion a %SQL_SERVER%\%SQL_BASE%...
-sqlcmd -S %SQL_SERVER% %SQLCMD_AUTH% -d %SQL_BASE% -Q "SELECT 1" -b >nul 2>&1
+:: ================================================================
+:: VERIFICATION : connexion a la base
+:: ================================================================
+ECHO    Test de connexion...
+sqlcmd -S "%SQL_SERVER%" -U "%SQL_USER%" -P "%SQL_PASS%" -d "%SQL_BASE%" ^
+       -Q "SET NOCOUNT ON; SELECT 'OK' AS connexion" -b -h-1 >NUL 2>&1
 IF ERRORLEVEL 1 (
-    ECHO %KO% Connexion impossible a %SQL_SERVER%\%SQL_BASE%
-    ECHO %KO% Connexion impossible >> "%LOGFILE%"
-    PAUSE
-    EXIT /B 1
+    CALL :PRINT_KO "Connexion impossible a %SQL_SERVER% / %SQL_BASE%"
+    CALL :LOG "[FATAL] Connexion impossible a %SQL_SERVER% / %SQL_BASE%"
+    GOTO :ERREUR_FATALE
 )
-ECHO  %OK% Connexion etablie.
+CALL :PRINT_OK "Connexion etablie sur %SQL_SERVER% / %SQL_BASE%"
 ECHO.
 
-REM ========================================================================
-REM  Ordre de deploiement des procedures stockees
-REM  (les procedures independantes en premier, puis celles avec dependances)
-REM ========================================================================
+:: ================================================================
+:: DEPLOIEMENT DES PROCEDURES STOCKEES
+:: (ordre : independantes d'abord, puis avec dependances)
+:: ================================================================
+CALL :PRINT_SEP "-"
+ECHO    Deploiement en cours...
+CALL :PRINT_SEP "-"
 
-SET COUNT_OK=0
-SET COUNT_KO=0
+CALL :DEPLOY "SP_ATHENEO_STATS.sql"                     "Stats globales (health check)"
+CALL :DEPLOY "SP_ATHENEO_RECHERCHER_INTERLOCUTEUR.sql"  "Recherche interlocuteur par email"
+CALL :DEPLOY "SP_ATHENEO_CREER_INTERLOCUTEUR.sql"       "Creation interlocuteur (idempotent)"
+CALL :DEPLOY "SP_ATHENEO_ENREGISTRER_MAIL.sql"          "Enregistrement email Outlook"
+CALL :DEPLOY "SP_ATHENEO_LISTER_EMAILS.sql"             "Listage emails Outlook"
+CALL :DEPLOY "SP_ATHENEO_CREER_DEMANDE.sql"             "Creation demande (ref DEM-YYYY-XXXXX)"
+CALL :DEPLOY "SP_ATHENEO_LISTER_DEMANDES.sql"           "Listage demandes Outlook"
+CALL :DEPLOY "SP_ATHENEO_CREER_ACTION.sql"              "Creation action suivi (ref ACT-YYYY-XXXXX)"
+CALL :DEPLOY "SP_ATHENEO_LISTER_ACTIONS.sql"            "Listage actions Outlook"
+CALL :DEPLOY "SP_ATHENEO_ENREGISTRER_PIECE_JOINTE.sql"  "Enregistrement piece jointe"
 
-CALL :DEPLOY_SP "SP_ATHENEO_STATS.sql"                       "Stats globales Outlook Add-in"
-CALL :DEPLOY_SP "SP_ATHENEO_RECHERCHER_INTERLOCUTEUR.sql"    "Recherche interlocuteur par email"
-CALL :DEPLOY_SP "SP_ATHENEO_CREER_INTERLOCUTEUR.sql"         "Creation interlocuteur depuis email"
-CALL :DEPLOY_SP "SP_ATHENEO_ENREGISTRER_MAIL.sql"            "Enregistrement email Outlook"
-CALL :DEPLOY_SP "SP_ATHENEO_LISTER_EMAILS.sql"               "Liste des emails Outlook"
-CALL :DEPLOY_SP "SP_ATHENEO_CREER_DEMANDE.sql"               "Creation demande depuis Outlook"
-CALL :DEPLOY_SP "SP_ATHENEO_LISTER_DEMANDES.sql"             "Liste des demandes Outlook"
-CALL :DEPLOY_SP "SP_ATHENEO_CREER_ACTION.sql"                "Creation action de suivi Outlook"
-CALL :DEPLOY_SP "SP_ATHENEO_LISTER_ACTIONS.sql"              "Liste des actions Outlook"
-CALL :DEPLOY_SP "SP_ATHENEO_ENREGISTRER_PIECE_JOINTE.sql"    "Enregistrement piece jointe Outlook"
-
-REM --- Resume ---
+:: ================================================================
+:: RESUME FINAL
+:: ================================================================
+SET "TIME_END=%TIME%"
 ECHO.
-ECHO  ========================================================
-ECHO   RESUME DU DEPLOIEMENT
-ECHO   %OK% Procedures deployees avec succes : %COUNT_OK%
-IF %COUNT_KO% GTR 0 (
-    ECHO   %KO% Procedures en erreur           : %COUNT_KO%
+CALL :PRINT_SEP "="
+ECHO.
+ECHO    RESUME DU DEPLOIEMENT
+ECHO.
+ECHO    Total     : %CNT_TOTAL% procedures
+ECHO    Succes    : %CNT_OK%
+ECHO    Erreurs   : %CNT_KO%
+ECHO    Debut     : %TIME_START%
+ECHO    Fin       : %TIME_END%
+ECHO.
+
+CALL :LOG "================================================================"
+CALL :LOG " RESUME : %CNT_OK% OK / %CNT_KO% ERREUR / %CNT_TOTAL% TOTAL"
+CALL :LOG " Debut : %TIME_START%  |  Fin : %TIME_END%"
+CALL :LOG "================================================================"
+
+IF %CNT_KO% GTR 0 (
+    CALL :PRINT_KO "%CNT_KO% procedure(s) en erreur - consultez : %LOGFILE%"
     ECHO.
-    ECHO   Consultez le fichier de log :
-    ECHO   %LOGFILE%
-) ELSE (
-    ECHO   Toutes les procedures ont ete deployees avec succes.
-)
-ECHO  ========================================================
-ECHO.
-
-ECHO RESUME : %COUNT_OK% OK / %COUNT_KO% ERREUR >> "%LOGFILE%"
-
-IF %COUNT_KO% GTR 0 (
+    CALL :PRINT_SEP "="
+    ECHO.
     PAUSE
     EXIT /B 1
 )
 
-ECHO  Deploiement termine. Appuyez sur une touche pour quitter.
-PAUSE >nul
+CALL :PRINT_OK "Toutes les procedures ont ete deployees avec succes."
+ECHO.
+CALL :PRINT_SEP "="
+ECHO.
+ECHO    Appuyez sur une touche pour fermer...
+PAUSE >NUL
 EXIT /B 0
 
-REM ========================================================================
-REM  Sous-routine de deploiement d'une procedure stockee
-REM  Param 1 : nom du fichier SQL
-REM  Param 2 : libelle descriptif
-REM ========================================================================
-:DEPLOY_SP
-SET "SP_FILE=%~1"
-SET "SP_DESC=%~2"
-SET "SP_PATH=%SCRIPT_DIR%%SP_FILE%"
+:: ================================================================
+:: :DEPLOY - deploie une procedure stockee
+::   %1 = nom du fichier .sql
+::   %2 = libelle affiche dans la console
+:: ================================================================
+:DEPLOY
+SET /A CNT_TOTAL+=1
+SET "_FILE=%~1"
+SET "_DESC=%~2"
+SET "_PATH=%SCRIPT_DIR%%_FILE%"
 
-IF NOT EXIST "%SP_PATH%" (
-    ECHO  %KO% Fichier introuvable : %SP_FILE%
-    ECHO %KO% Fichier introuvable : %SP_FILE% >> "%LOGFILE%"
-    SET /A COUNT_KO+=1
+:: Padding du libelle pour aligner les statuts
+SET "_LABEL=  [%CNT_TOTAL%] %-50s%_DESC%"
+
+IF NOT EXIST "%_PATH%" (
+    SET "_LABEL=[%CNT_TOTAL%] INTROUVABLE : %_FILE%"
+    ECHO    !_LABEL!  [SKIP]
+    CALL :LOG "[SKIP] %_FILE% - fichier introuvable"
+    SET /A CNT_KO+=1
     GOTO :EOF
 )
 
-ECHO  Deploiement : %-55s%%SP_DESC%
-sqlcmd -S %SQL_SERVER% %SQLCMD_AUTH% -d %SQL_BASE% -i "%SP_PATH%" -b >> "%LOGFILE%" 2>&1
+<NUL SET /P "=    [%CNT_TOTAL%] %-52s%_DESC% ... "
+
+sqlcmd -S "%SQL_SERVER%" -U "%SQL_USER%" -P "%SQL_PASS%" -d "%SQL_BASE%" ^
+       -i "%_PATH%" -b -r1 >> "%LOGFILE%" 2>&1
 
 IF ERRORLEVEL 1 (
-    ECHO   %KO%  %SP_FILE%
-    ECHO %KO% %SP_FILE% >> "%LOGFILE%"
-    SET /A COUNT_KO+=1
+    ECHO [ ERREUR ]
+    CALL :LOG "[ERREUR] %_FILE%"
+    SET /A CNT_KO+=1
 ) ELSE (
-    ECHO   %OK%  %SP_FILE%
-    ECHO %OK% %SP_FILE% >> "%LOGFILE%"
-    SET /A COUNT_OK+=1
+    ECHO [  OK    ]
+    CALL :LOG "[OK]     %_FILE%"
+    SET /A CNT_OK+=1
 )
 GOTO :EOF
+
+:: ================================================================
+:: :PRINT_SEP - separateur console
+::   %1 = caractere (= ou -)
+:: ================================================================
+:PRINT_SEP
+ECHO    ---------------------------------------------------------------
+GOTO :EOF
+
+:: ================================================================
+:: :PRINT_OK - message succes
+:: ================================================================
+:PRINT_OK
+ECHO    [  OK  ] %~1
+GOTO :EOF
+
+:: ================================================================
+:: :PRINT_KO - message erreur
+:: ================================================================
+:PRINT_KO
+ECHO    [ERREUR] %~1
+GOTO :EOF
+
+:: ================================================================
+:: :LOG - ecriture dans le fichier log
+:: ================================================================
+:LOG
+ECHO %~1 >> "%LOGFILE%"
+GOTO :EOF
+
+:: ================================================================
+:: :ERREUR_FATALE
+:: ================================================================
+:ERREUR_FATALE
+ECHO.
+CALL :PRINT_SEP "="
+ECHO    Deploiement interrompu. Appuyez sur une touche...
+PAUSE >NUL
+EXIT /B 1

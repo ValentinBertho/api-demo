@@ -1,3 +1,9 @@
+# ============================================================
+#  ATHENEO Outlook Add-in API - Configuration
+#  Serveur : NA-ATHERP\SQL2022
+#  Base    : ATH_ERP_V17_1
+# ============================================================
+
 server:
   port: ${PORT:8080}
   servlet:
@@ -5,19 +11,20 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:atheneo_demo
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:sqlserver://NA-ATHERP\SQL2022;databaseName=ATH_ERP_V17_1;encrypt=false
+    username: atheneo_sql
+    password: M@ster2016
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.SQLServerDialect
     hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 25
+        format_sql: false
 
 cors:
   allowed:
@@ -25,7 +32,7 @@ cors:
 
 logging:
   level:
-    com:
-      atheneo: INFO
+    fr.mismo: INFO
+    org.hibernate.SQL: WARN
   pattern:
-    console: "%d{HH:mm:ss} - %msg%n"
+    console: "%d{dd/MM HH:mm:ss} [%-5level] %logger{20} - %msg%n"
