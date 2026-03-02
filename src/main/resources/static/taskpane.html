@@ -445,6 +445,23 @@
             <div class="spin"></div>
         </button>
 
+        <button class="action-card" id="btnOpenIncident" onclick="openIncident()">
+            <div class="action-icon-wrap purple">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="16" x2="12" y2="12"/>
+                    <line x1="12" y1="8"  x2="12.01" y2="8"/>
+                </svg>
+            </div>
+            <div class="action-body">
+                <div class="action-title">Consulter l’incident</div>
+                <div class="action-desc">Ouvrir l’incident dans ATHENEO</div>
+            </div>
+            <svg class="action-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="9 18 15 12 9 6"/>
+            </svg>
+        </button>
+
     </div>
 
     <!-- TOAST -->
@@ -598,6 +615,18 @@
                 setLoading(btn, false);
             }
         }
+
+        function openIncident() {
+    const url = "ath:Consulter?INCIDENT/832666";
+
+    try {
+        window.location.href = url;
+        showToast("Ouverture de l’incident…", "success");
+    } catch (err) {
+        console.error("openIncident:", err);
+        showToast("Impossible d’ouvrir ATHENEO", "error");
+    }
+}
 
         // ─────────────────────────────────────────────────
         // HELPERS UI
