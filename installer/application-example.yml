@@ -1,0 +1,77 @@
+# ============================================================
+# ATHENEO Outlook Add-in API - Exemple de configuration
+# Copiez ce fichier vers : <dossier_install>\config\application.yml
+# et adaptez les valeurs a votre environnement.
+#
+# Ce fichier est genere automatiquement par l'installeur Inno Setup.
+# Vous pouvez le modifier manuellement apres installation.
+# ============================================================
+
+# ── SERVEUR ──────────────────────────────────────────────────
+server:
+  port: 8080                        # Port d'ecoute de l'API (1024-65535)
+  servlet:
+    context-path: /atheneo          # Prefixe de toutes les routes : /atheneo/api/...
+
+# ── BASE DE DONNEES ──────────────────────────────────────────
+spring:
+  datasource:
+
+    # --- Option A : SQL Server avec authentification SQL (recommande) ---
+    url: jdbc:sqlserver://NA-ATHERP\SQL2022;databaseName=ATH_ERP_V17_1;encrypt=true;trustServerCertificate=true
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    username: atheneo_sql
+    password: VotreMotDePasse
+
+    # --- Option B : SQL Server avec authentification Windows (domaine) ---
+    # url: jdbc:sqlserver://MONSЕРВEUR\SQL2022;databaseName=MABASE;integratedSecurity=true;encrypt=true;trustServerCertificate=true
+    # driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    # username:
+    # password:
+
+    # --- Option C : H2 en memoire (demo/test uniquement, donnees perdues au redemarrage) ---
+    # url: jdbc:h2:mem:atheneo_demo
+    # driver-class-name: org.h2.Driver
+    # username: sa
+    # password:
+
+  jpa:
+    database-platform: org.hibernate.dialect.SQLServerDialect  # Changer en H2Dialect pour l'option C
+    hibernate:
+      ddl-auto: none                # 'none' pour SQL Server, 'create-drop' pour H2
+    show-sql: false                 # Passer a true pour deboguer les requetes SQL
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 25
+
+  # --- Console H2 (uniquement pour l'option C - ne pas activer en production) ---
+  # h2:
+  #   console:
+  #     enabled: true
+  #     path: /h2-console            # Accessible sur http://localhost:8080/atheneo/h2-console
+
+# ── CORS (Origines autorisees) ────────────────────────────────
+# Indiquez l'URL de votre environnement Outlook si connu, ou "*" pour tout autoriser.
+# Exemples :
+#   "*"                                                -> tout autoriser (dev/test)
+#   "https://outlook.office.com"                       -> Outlook Web uniquement
+#   "https://outlook.office.com,https://outlook.live.com" -> plusieurs origines
+cors:
+  allowed:
+    origins: "*"
+
+# ── JOURNALISATION ───────────────────────────────────────────
+logging:
+  level:
+    fr:
+      mismo: INFO                   # Niveau de log de l'application (DEBUG, INFO, WARN, ERROR)
+    org:
+      hibernate:
+        SQL: WARN                   # Mettre a DEBUG pour voir toutes les requetes SQL
+  pattern:
+    console: "%d{dd/MM HH:mm:ss} [%-5level] %logger{20} - %msg%n"
+  file:
+    name: logs/atheneo-api.log      # Chemin du fichier log (relatif au dossier de lancement)
+    max-size: 10MB
+    max-history: 30                 # Nombre de jours de retention des logs

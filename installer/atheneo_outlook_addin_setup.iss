@@ -37,7 +37,9 @@ DefaultDirName={autopf}\ATHENEO\OutlookAddinAPI
 DefaultGroupName=ATHENEO\Outlook Add-in API
 OutputDir=.\output
 OutputBaseFilename=ATHENEO_OutlookAddinAPI_Setup_{#AppVersion}
-SetupIconFile=..\src\main\resources\static\assets\icon-80.png
+; Note : pas de SetupIconFile - utilise l'icone Inno Setup par defaut
+; Pour utiliser une icone personnalisee, placez un fichier .ico ici et ajoutez :
+; SetupIconFile=atheneo.ico
 Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
@@ -96,6 +98,12 @@ Source: "..\src\structure\DEPLOY_ALL_SP.cmd";    DestDir: "{app}\sql"; Flags: ig
 ; Assets statiques (servis par Spring Boot)
 ; Note : inclus dans le JAR, pas besoin de copie separee
 
+; === NOTE SUR LE SERVICE WINDOWS ===
+; Cette installation utilise le Planificateur de taches Windows (schtasks)
+; pour demarrer l'API automatiquement au boot - aucun outil tiers requis.
+; Prerequis : Java 21+ accessible dans le PATH du compte SYSTEM
+; (ou modifier start_api.bat pour preciser le chemin Java complet).
+
 [Icons]
 Name: "{group}\Demarrer l'API ATHENEO";        Filename: "{app}\start_api.bat"; WorkingDir: "{app}"
 Name: "{group}\Console H2 (dev)";              Filename: "http://localhost:{code:GetPortValue}/atheneo/h2-console"
@@ -103,16 +111,17 @@ Name: "{group}\Health Check API";              Filename: "http://localhost:{code
 Name: "{group}\Desinstaller {#AppName}";       Filename: "{uninstallexe}"
 
 [Run]
-; Arret du service existant avant mise a jour
-Filename: "net"; Parameters: "stop {#ServiceName}"; Flags: runhidden waituntilterminated; StatusMsg: "Arret du service existant..."; Check: ServiceExists
-; Installation du service Windows avec NSSM (si composant selectionne)
-Filename: "{app}\nssm.exe"; Parameters: "install {#ServiceName} ""{pf64}\Java\jdk-21\bin\java.exe"" ""-jar {app}\atheneo-demo-api-1.0.0.jar --spring.config.location=file:{app}/config/application.yml"""; Flags: runhidden waituntilterminated; StatusMsg: "Installation du service Windows..."; Components: service; Tasks: not resetconfig
-; Demarrage du service
-Filename: "net"; Parameters: "start {#ServiceName}"; Flags: runhidden waituntilterminated; StatusMsg: "Demarrage du service..."; Components: service; Tasks: startservice
+; Suppression de la tache planifiee existante avant mise a jour
+Filename: "schtasks"; Parameters: "/delete /tn ""{#ServiceName}"" /f"; Flags: runhidden waituntilterminated; StatusMsg: "Suppression tache planifiee existante..."; Check: ServiceExists
+; Creation de la tache planifiee (Planificateur Windows - aucun outil tiers requis)
+; La tache se lance au demarrage systeme avec les droits SYSTEM
+Filename: "schtasks"; Parameters: "/create /tn ""{#ServiceName}"" /tr ""cmd /c start """" /b \""{app}\start_api.bat\"""" /sc onstart /ru SYSTEM /rl HIGHEST /f"; Flags: runhidden waituntilterminated; StatusMsg: "Creation de la tache planifiee au demarrage..."; Components: service
+; Demarrage immediat si demande
+Filename: "schtasks"; Parameters: "/run /tn ""{#ServiceName}"""; Flags: runhidden waituntilterminated; StatusMsg: "Demarrage du service..."; Components: service; Tasks: startservice
 
 [UninstallRun]
-Filename: "net";             Parameters: "stop {#ServiceName}";   Flags: runhidden waituntilterminated
-Filename: "{app}\nssm.exe";  Parameters: "remove {#ServiceName} confirm"; Flags: runhidden waituntilterminated; Check: ServiceExists
+Filename: "schtasks"; Parameters: "/end /tn ""{#ServiceName}""";    Flags: runhidden waituntilterminated
+Filename: "schtasks"; Parameters: "/delete /tn ""{#ServiceName}"" /f"; Flags: runhidden waituntilterminated; Check: ServiceExists
 
 [Code]
 
@@ -231,13 +240,13 @@ begin
 
     if (Trim(EdtDBServer.Text) <> '') and (DBUser <> '') then
     begin
-      Lines.Add('    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver');
+      Lines.Add('    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver');
       Lines.Add('    username: ' + DBUser);
       Lines.Add('    password: ' + DBPass);
     end
     else if (Trim(EdtDBServer.Text) <> '') then
     begin
-      Lines.Add('    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver');
+      Lines.Add('    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver');
       Lines.Add('    username:');
       Lines.Add('    password:');
     end
@@ -279,8 +288,8 @@ begin
     Lines.Add('');
     Lines.Add('logging:');
     Lines.Add('  level:');
-    Lines.Add('    com:');
-    Lines.Add('      atheneo: INFO');
+    Lines.Add('    fr:');
+    Lines.Add('      mismo: INFO');
     Lines.Add('  pattern:');
     Lines.Add('    console: "%d{dd/MM HH:mm:ss} [%thread] %-5level %logger{15} - %msg%n"');
     Lines.Add('  file:');
@@ -298,11 +307,12 @@ end;
 { ======================================================================
   Verifie si le service Windows est deja installe
   ====================================================================== }
+{ Verifie si la tache planifiee est deja enregistree }
 function ServiceExists: Boolean;
 var
   ResultCode: Integer;
 begin
-  Result := Exec('sc', 'query {#ServiceName}', '', SW_HIDE, ewWaitUntilTerminated, ResultCode)
+  Result := Exec('schtasks', '/query /tn "{#ServiceName}"', '', SW_HIDE, ewWaitUntilTerminated, ResultCode)
             and (ResultCode = 0);
 end;
 
