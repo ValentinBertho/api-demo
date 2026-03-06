@@ -23,33 +23,16 @@ spring:
     username: atheneo_sql
     password: VotreMotDePasse
 
-    # --- Option B : SQL Server avec authentification Windows (domaine) ---
-    # url: jdbc:sqlserver://MONSЕРВEUR\SQL2022;databaseName=MABASE;integratedSecurity=true;encrypt=true;trustServerCertificate=true
-    # driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    # username:
-    # password:
-
-    # --- Option C : H2 en memoire (demo/test uniquement, donnees perdues au redemarrage) ---
-    # url: jdbc:h2:mem:atheneo_demo
-    # driver-class-name: org.h2.Driver
-    # username: sa
-    # password:
 
   jpa:
-    database-platform: org.hibernate.dialect.SQLServerDialect  # Changer en H2Dialect pour l'option C
+    database-platform: org.hibernate.dialect.SQLServerDialect 
     hibernate:
-      ddl-auto: none                # 'none' pour SQL Server, 'create-drop' pour H2
+      ddl-auto: none                
     show-sql: false                 # Passer a true pour deboguer les requetes SQL
     properties:
       hibernate:
         jdbc:
           batch_size: 25
-
-  # --- Console H2 (uniquement pour l'option C - ne pas activer en production) ---
-  # h2:
-  #   console:
-  #     enabled: true
-  #     path: /h2-console            # Accessible sur http://localhost:8080/atheneo/h2-console
 
 # ── CORS (Origines autorisees) ────────────────────────────────
 # Indiquez l'URL de votre environnement Outlook si connu, ou "*" pour tout autoriser.
@@ -57,6 +40,7 @@ spring:
 #   "*"                                                -> tout autoriser (dev/test)
 #   "https://outlook.office.com"                       -> Outlook Web uniquement
 #   "https://outlook.office.com,https://outlook.live.com" -> plusieurs origines
+
 cors:
   allowed:
     origins: "*"

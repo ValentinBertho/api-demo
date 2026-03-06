@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service>
+    <id>ath-facturx</id>
+    <name>ATHENEO : INTERFACE FacturX</name>
+    <description>ATHENEO : INTERFACE FacturX</description>
+    <executable>C:\Program Files\Java\jdk-21\bin\java</executable>
+    <arguments>-Xmx128m -XX:+UseStringDeduplication -XX:+UseSerialGC -jar interface-facture.jar</arguments>
+    <logmode>rotate</logmode>
+</service>

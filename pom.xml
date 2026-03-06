@@ -54,6 +54,42 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+
+		<!-- Spring SOAP Web Services -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web-services</artifactId>
+		</dependency>
+
+		<!-- Spring WS Core (WebServiceTemplate) -->
+		<dependency>
+			<groupId>org.springframework.ws</groupId>
+			<artifactId>spring-ws-core</artifactId>
+		</dependency>
+
+		<!-- JAXB (obligatoire avec Java 21) -->
+		<dependency>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+		</dependency>
+
+		<!-- JAX-WS API -->
+		<dependency>
+			<groupId>jakarta.xml.ws</groupId>
+			<artifactId>jakarta.xml.ws-api</artifactId>
+		</dependency>
+
+		<!-- Runtime JAX-WS -->
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>jaxws-rt</artifactId>
+			<version>4.0.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -61,6 +97,32 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.sun.xml.ws</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>4.0.2</version>
+
+				<executions>
+					<execution>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+					</execution>
+				</executions>
+
+				<configuration>
+					<wsdlDirectory>${project.basedir}/src/main/resources/wsdocument</wsdlDirectory>
+					<wsdlFiles>
+						<wsdlFile>WSDocument.wsdl</wsdlFile>
+					</wsdlFiles>
+
+					<packageName>fr.mismo.wsdocument.wsdl</packageName>
+
+					<sourceDestDir>
+						${project.build.directory}/generated-sources/wsimport
+					</sourceDestDir>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

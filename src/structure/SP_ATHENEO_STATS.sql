@@ -44,16 +44,11 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        (SELECT COUNT(*) FROM MAIL        WHERE SOURCE = 'OUTLOOK_ADDIN')   AS totalEmails,
+        0   AS totalEmails,
         (SELECT COUNT(*) FROM DEMANDE_P   WHERE C5     = 'outlook_addin')   AS totalDemandes,
         (SELECT COUNT(*) FROM INTERLOC    WHERE SOURCE = 'OUTLOOK_ADDIN')   AS totalInterlocuteurs,
         (SELECT COUNT(*) FROM ACTION      WHERE SOURCE = 'OUTLOOK_ADDIN')   AS totalActions,
-        (SELECT COUNT(*) FROM PIECE
-            WHERE CREER_PAR IN (
-                SELECT DISTINCT LEFT(CREER_PAR, 10) FROM MAIL
-                WHERE SOURCE = 'OUTLOOK_ADDIN'
-            )
-        )                                                                    AS totalPiecesJointes,
+        0                                                              AS totalPiecesJointes,
         GETDATE()                                                            AS dateConsultation
 
 END

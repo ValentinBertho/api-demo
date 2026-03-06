@@ -18,13 +18,11 @@
             --error:         #dc2626;
             --error-light:   #fca5a5;
             --error-glow:    rgba(220, 38, 38, 0.2);
-
             --bg:            #0f0e1a;
             --bg-card:       #18172b;
             --bg-raised:     #211f38;
             --border:        rgba(255,255,255,0.07);
             --border-hover:  rgba(124, 58, 237, 0.5);
-
             --text-1: #f1f0ff;
             --text-2: #a09ec0;
             --text-3: #6b698a;
@@ -49,62 +47,33 @@
             border-bottom: 1px solid var(--border);
             flex-shrink: 0;
         }
-
         .logo {
-            width: 30px;
-            height: 30px;
+            width: 30px; height: 30px;
             background: linear-gradient(135deg, #7c3aed, #a855f7);
             border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
             box-shadow: 0 0 12px var(--primary-glow);
         }
-
         .logo svg { display: block; }
-
-        .header-title {
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: 0.8px;
-            color: var(--text-1);
-        }
-
-        .header-sub {
-            font-size: 10px;
-            color: var(--text-3);
-            margin-top: 1px;
-        }
-
+        .header-title { font-size: 15px; font-weight: 700; letter-spacing: 0.8px; color: var(--text-1); }
+        .header-sub   { font-size: 10px; color: var(--text-3); margin-top: 1px; }
         .api-pill {
             margin-left: auto;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 11px;
-            color: var(--text-3);
+            display: flex; align-items: center; gap: 5px;
+            font-size: 11px; color: var(--text-3);
             background: var(--bg-raised);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 4px 10px;
+            border-radius: 20px; padding: 4px 10px;
         }
-
         .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #10b981;
-            box-shadow: 0 0 6px #10b981;
+            width: 6px; height: 6px; border-radius: 50%;
+            background: #10b981; box-shadow: 0 0 6px #10b981;
             animation: pulse 2.4s ease-in-out infinite;
         }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50%       { opacity: 0.3; }
-        }
-
-        /* ── CONTEXTE EMAIL ──────────────────────────────── */
+        /* ── EMAIL CARD ──────────────────────────────────── */
         .email-card {
             margin: 12px 14px 0;
             background: var(--bg-card);
@@ -113,1034 +82,747 @@
             padding: 12px 14px;
             flex-shrink: 0;
         }
-
         .email-label {
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: var(--text-3);
-            margin-bottom: 8px;
+            font-size: 10px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.8px;
+            color: var(--text-3); margin-bottom: 8px;
         }
-
-        .email-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            padding: 5px 0;
-        }
-
-        .email-row + .email-row {
-            border-top: 1px solid var(--border);
-        }
-
+        .email-row { display: flex; align-items: flex-start; gap: 8px; padding: 5px 0; }
+        .email-row + .email-row { border-top: 1px solid var(--border); }
         .email-row-icon {
-            width: 26px;
-            height: 26px;
-            border-radius: 6px;
-            background: var(--bg-raised);
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            margin-top: 1px;
+            width: 26px; height: 26px; border-radius: 6px;
+            background: var(--bg-raised); border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; margin-top: 1px;
         }
-
         .email-row-icon svg { display: block; }
+        .email-row-key  { font-size: 10px; color: var(--text-3); font-weight: 500; margin-bottom: 1px; }
+        .email-row-val  { font-size: 12px; color: var(--text-1); line-height: 1.4; word-break: break-word; }
+        .email-row-val em { font-style: normal; font-size: 10px; color: var(--text-3); }
 
-        .email-row-key {
-            font-size: 10px;
-            color: var(--text-3);
-            font-weight: 500;
-            margin-bottom: 1px;
+        /* ── CONTEXTE BADGE ──────────────────────────────── */
+        .contexte-badge {
+            margin: 8px 14px 0;
+            background: rgba(124, 58, 237, 0.08);
+            border: 1px solid rgba(124, 58, 237, 0.25);
+            border-radius: 8px;
+            padding: 8px 12px;
+            display: flex; align-items: center; gap: 8px;
+            flex-shrink: 0;
         }
-
-        .email-row-val {
-            font-size: 12px;
-            color: var(--text-1);
-            line-height: 1.4;
-            word-break: break-word;
+        .contexte-badge-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--primary-light); flex-shrink: 0;
         }
-
-        .email-row-val em {
-            font-style: normal;
-            font-size: 10px;
-            color: var(--text-3);
-        }
+        .contexte-badge-text { font-size: 11px; color: var(--primary-light); font-weight: 500; }
+        .contexte-badge.hidden { display: none; }
 
         /* ── ACTIONS ─────────────────────────────────────── */
         .actions-wrap {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 12px 14px 14px;
-            gap: 9px;
-            overflow-y: auto;
+            flex: 1; display: flex; flex-direction: column;
+            padding: 12px 14px 14px; gap: 9px; overflow-y: auto;
         }
-
         .action-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 14px;
+            border-radius: 12px; padding: 14px;
             cursor: pointer;
-            transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s, background 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            text-align: left;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-            flex-shrink: 0;
+            transition: border-color .2s, box-shadow .2s, transform .15s, background .2s;
+            display: flex; align-items: center; gap: 14px;
+            text-align: left; width: 100%;
+            position: relative; overflow: hidden; flex-shrink: 0;
         }
-
         .action-card:hover:not(:disabled) {
             border-color: var(--border-hover);
-            box-shadow: 0 0 0 1px var(--primary-glow), 0 6px 20px rgba(0,0,0,0.4);
+            box-shadow: 0 0 0 1px var(--primary-glow), 0 6px 20px rgba(0,0,0,.4);
             transform: translateY(-1px);
             background: var(--bg-raised);
         }
-
-        .action-card:active:not(:disabled) {
-            transform: translateY(0);
-            box-shadow: none;
-        }
-
-        .action-card:disabled {
-            opacity: 0.45;
-            cursor: not-allowed;
-        }
-
+        .action-card:active:not(:disabled) { transform: translateY(0); box-shadow: none; }
+        .action-card:disabled { opacity: .45; cursor: not-allowed; }
         .action-card.done {
             border-color: var(--success);
             box-shadow: 0 0 0 1px var(--success-glow), 0 4px 12px var(--success-glow);
-            background: rgba(5, 150, 105, 0.06);
-            pointer-events: none;
+            background: rgba(5,150,105,.06); pointer-events: none;
         }
-
         .action-card.fail {
             border-color: var(--error);
             box-shadow: 0 0 0 1px var(--error-glow);
-            background: rgba(220, 38, 38, 0.06);
+            background: rgba(220,38,38,.06);
         }
-
         .action-icon-wrap {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: background 0.2s;
+            width: 40px; height: 40px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; transition: background .2s;
         }
-
-        .action-icon-wrap.purple {
-            background: rgba(124, 58, 237, 0.15);
-            border: 1px solid rgba(124, 58, 237, 0.3);
-        }
-
-        .action-icon-wrap.indigo {
-            background: rgba(99, 102, 241, 0.15);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-        }
-
-        .action-icon-wrap.teal {
-            background: rgba(8, 145, 178, 0.15);
-            border: 1px solid rgba(8, 145, 178, 0.3);
-        }
-
-        .action-icon-wrap.amber {
-            background: rgba(217, 119, 6, 0.15);
-            border: 1px solid rgba(217, 119, 6, 0.3);
-        }
-
-        .action-card.done .action-icon-wrap {
-            background: var(--success-glow);
-            border-color: rgba(5, 150, 105, 0.4);
-        }
-
-        .action-card.fail .action-icon-wrap {
-            background: var(--error-glow);
-            border-color: rgba(220, 38, 38, 0.4);
-        }
-
+        .action-icon-wrap.purple { background: rgba(124,58,237,.15); border: 1px solid rgba(124,58,237,.3); }
+        .action-icon-wrap.indigo { background: rgba(99,102,241,.15); border: 1px solid rgba(99,102,241,.3); }
+        .action-icon-wrap.teal   { background: rgba(8,145,178,.15);  border: 1px solid rgba(8,145,178,.3);  }
+        .action-icon-wrap.amber  { background: rgba(217,119,6,.15);  border: 1px solid rgba(217,119,6,.3);  }
+        .action-card.done .action-icon-wrap { background: var(--success-glow); border-color: rgba(5,150,105,.4); }
+        .action-card.fail .action-icon-wrap { background: var(--error-glow);   border-color: rgba(220,38,38,.4); }
         .action-body { flex: 1; min-width: 0; }
-
-        .action-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-1);
-            margin-bottom: 2px;
-        }
-
-        .action-desc {
-            font-size: 11px;
-            color: var(--text-3);
-            line-height: 1.4;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .action-feedback {
-            font-size: 11px;
-            margin-top: 4px;
-            font-weight: 500;
-            display: none;
-        }
-
+        .action-title { font-size: 13px; font-weight: 600; color: var(--text-1); margin-bottom: 2px; }
+        .action-desc  { font-size: 11px; color: var(--text-3); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .action-feedback { font-size: 11px; margin-top: 4px; font-weight: 500; display: none; }
         .action-card.done .action-feedback { display: block; color: var(--success-light); }
         .action-card.fail .action-feedback { display: block; color: var(--error-light); }
-
-        .action-arrow {
-            color: var(--text-3);
-            transition: color 0.2s, transform 0.2s;
-            flex-shrink: 0;
-        }
-
-        .action-card:hover:not(:disabled) .action-arrow {
-            color: var(--primary-light);
-            transform: translateX(3px);
-        }
-
+        .action-arrow { color: var(--text-3); transition: color .2s, transform .2s; flex-shrink: 0; }
+        .action-card:hover:not(:disabled) .action-arrow { color: var(--primary-light); transform: translateX(3px); }
         .spin {
-            display: none;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255,255,255,0.15);
+            display: none; width: 16px; height: 16px;
+            border: 2px solid rgba(255,255,255,.15);
             border-top-color: var(--primary-light);
             border-radius: 50%;
-            animation: rotate 0.7s linear infinite;
-            flex-shrink: 0;
+            animation: rotate .7s linear infinite; flex-shrink: 0;
         }
-
-        .action-card.loading .spin        { display: block; }
+        .action-card.loading .spin         { display: block; }
         .action-card.loading .action-arrow { display: none; }
-        .action-card.loading               { pointer-events: none; opacity: 0.7; }
-
+        .action-card.loading               { pointer-events: none; opacity: .7; }
         @keyframes rotate { to { transform: rotate(360deg); } }
 
         /* ── PJ OVERLAY ──────────────────────────────────── */
         .pj-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.65);
-            z-index: 200;
-            display: none;
-            align-items: flex-end;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,.65);
+            z-index: 200; display: none; align-items: flex-end;
             backdrop-filter: blur(3px);
         }
-
-        .pj-overlay.visible {
-            display: flex;
-        }
-
+        .pj-overlay.visible { display: flex; }
         .pj-panel {
-            width: 100%;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-bottom: none;
-            border-radius: 16px 16px 0 0;
-            max-height: 75vh;
-            display: flex;
-            flex-direction: column;
-            animation: slideUp 0.28s cubic-bezier(0.34, 1.3, 0.64, 1);
+            width: 100%; background: var(--bg-card);
+            border: 1px solid var(--border); border-bottom: none;
+            border-radius: 16px 16px 0 0; max-height: 75vh;
+            display: flex; flex-direction: column;
+            animation: slideUp .28s cubic-bezier(.34,1.3,.64,1);
         }
-
-        @keyframes slideUp {
-            from { transform: translateY(100%); opacity: 0; }
-            to   { transform: translateY(0);    opacity: 1; }
-        }
-
+        @keyframes slideUp { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
         .pj-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 18px 14px;
-            border-bottom: 1px solid var(--border);
-            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 18px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0;
         }
-
-        .pj-header-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-1);
-        }
-
-        .pj-header-sub {
-            font-size: 11px;
-            color: var(--text-3);
-            margin-top: 2px;
-        }
-
+        .pj-header-title { font-size: 14px; font-weight: 600; color: var(--text-1); }
+        .pj-header-sub   { font-size: 11px; color: var(--text-3); margin-top: 2px; }
         .pj-close-btn {
-            background: var(--bg-raised);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: var(--text-2);
-            font-size: 14px;
-            transition: background 0.2s, color 0.2s;
-            flex-shrink: 0;
+            background: var(--bg-raised); border: 1px solid var(--border);
+            border-radius: 8px; width: 28px; height: 28px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text-2); font-size: 14px;
+            transition: background .2s, color .2s; flex-shrink: 0;
         }
-
-        .pj-close-btn:hover { background: rgba(220,38,38,0.15); color: var(--error-light); }
-
-        .pj-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
+        .pj-close-btn:hover { background: rgba(220,38,38,.15); color: var(--error-light); }
+        .pj-list { flex: 1; overflow-y: auto; padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; }
         .pj-empty {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 30px 20px;
-            color: var(--text-3);
-            font-size: 13px;
-            gap: 8px;
-            text-align: center;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; padding: 30px 20px;
+            color: var(--text-3); font-size: 13px; gap: 8px; text-align: center;
         }
-
-        .pj-empty-icon {
-            font-size: 28px;
-            opacity: 0.5;
-        }
-
+        .pj-empty-icon { font-size: 28px; opacity: .5; }
         .pj-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
-            background: var(--bg-raised);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: border-color 0.15s, background 0.15s;
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 12px; background: var(--bg-raised);
+            border: 1px solid var(--border); border-radius: 8px;
+            cursor: pointer; transition: border-color .15s, background .15s;
         }
-
         .pj-item:hover { border-color: var(--border-hover); }
-
-        .pj-item input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            accent-color: var(--primary);
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
+        .pj-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
         .pj-item-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            background: rgba(124, 58, 237, 0.1);
-            border: 1px solid rgba(124, 58, 237, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 14px;
+            width: 32px; height: 32px; border-radius: 6px;
+            background: rgba(124,58,237,.1); border: 1px solid rgba(124,58,237,.2);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; font-size: 14px;
         }
-
         .pj-item-body { flex: 1; min-width: 0; }
-
-        .pj-item-name {
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-1);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .pj-item-meta {
-            font-size: 10px;
-            color: var(--text-3);
-            margin-top: 2px;
-        }
-
+        .pj-item-name { font-size: 12px; font-weight: 500; color: var(--text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .pj-item-meta { font-size: 10px; color: var(--text-3); margin-top: 2px; }
         .pj-footer {
-            padding: 12px 14px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-shrink: 0;
+            padding: 12px 14px; border-top: 1px solid var(--border);
+            display: flex; gap: 10px; align-items: center; flex-shrink: 0;
         }
-
-        .pj-select-all {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: var(--text-2);
-            cursor: pointer;
-            flex: 1;
-        }
-
-        .pj-select-all input {
-            width: 14px;
-            height: 14px;
-            accent-color: var(--primary);
-            cursor: pointer;
-        }
-
+        .pj-select-all { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-2); cursor: pointer; flex: 1; }
+        .pj-select-all input { width: 14px; height: 14px; accent-color: var(--primary); cursor: pointer; }
         .pj-send-btn {
             background: linear-gradient(135deg, var(--primary), #a855f7);
-            border: none;
-            border-radius: 8px;
-            padding: 9px 20px;
-            color: white;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s, transform 0.15s;
-            flex-shrink: 0;
+            border: none; border-radius: 8px; padding: 9px 20px;
+            color: white; font-size: 12px; font-weight: 600;
+            cursor: pointer; transition: opacity .2s, transform .15s; flex-shrink: 0;
         }
-
-        .pj-send-btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
-        .pj-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .pj-send-btn:hover:not(:disabled) { opacity: .9; transform: translateY(-1px); }
+        .pj-send-btn:disabled { opacity: .5; cursor: not-allowed; }
 
         /* ── TOAST ───────────────────────────────────────── */
         .toast {
-            position: fixed;
-            bottom: 16px;
-            left: 14px;
-            right: 14px;
-            padding: 11px 14px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 500;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            border: 1px solid;
-            backdrop-filter: blur(8px);
-            transform: translateY(80px);
-            opacity: 0;
-            transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
-            z-index: 300;
-            pointer-events: none;
+            position: fixed; bottom: 16px; left: 14px; right: 14px;
+            padding: 11px 14px; border-radius: 10px;
+            font-size: 12px; font-weight: 500;
+            display: flex; align-items: flex-start; gap: 8px;
+            border: 1px solid; backdrop-filter: blur(8px);
+            transform: translateY(80px); opacity: 0;
+            transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+            z-index: 300; pointer-events: none;
         }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .toast.success {
-            background: rgba(5, 150, 105, 0.12);
-            border-color: rgba(5, 150, 105, 0.4);
-            color: var(--success-light);
-        }
-
-        .toast.error {
-            background: rgba(220, 38, 38, 0.12);
-            border-color: rgba(220, 38, 38, 0.4);
-            color: var(--error-light);
-        }
-
+        .toast.show   { transform: translateY(0); opacity: 1; }
+        .toast.success { background: rgba(5,150,105,.12); border-color: rgba(5,150,105,.4); color: var(--success-light); }
+        .toast.error   { background: rgba(220,38,38,.12); border-color: rgba(220,38,38,.4); color: var(--error-light); }
         .toast-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
         .toast-text { flex: 1; line-height: 1.4; }
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
-    <div class="header">
-        <div class="logo">
-            <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
-                <path d="M9 2L16 14H2L9 2Z" fill="white" fill-opacity=".9"/>
+<!-- HEADER -->
+<div class="header">
+    <div class="logo">
+        <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+            <path d="M9 2L16 14H2L9 2Z" fill="white" fill-opacity=".9"/>
+        </svg>
+    </div>
+    <div>
+        <div class="header-title">ATHENEO</div>
+        <div class="header-sub">Outlook Add-in</div>
+    </div>
+    <div class="api-pill">
+        <span class="dot"></span>
+        <span>Connecté</span>
+    </div>
+</div>
+
+<!-- CONTEXTE EMAIL -->
+<div class="email-card">
+    <div class="email-label">Email en cours</div>
+    <div class="email-row">
+        <div class="email-row-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a09ec0" stroke-width="2" stroke-linecap="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
             </svg>
         </div>
-        <div>
-            <div class="header-title">ATHENEO</div>
-            <div class="header-sub">Outlook Add-in</div>
-        </div>
-        <div class="api-pill">
-            <span class="dot"></span>
-            <span>Connecté</span>
+        <div class="email-row-body">
+            <div class="email-row-key">Expéditeur</div>
+            <div class="email-row-val" id="emailFrom">Chargement…</div>
         </div>
     </div>
-
-    <!-- CONTEXTE EMAIL -->
-    <div class="email-card">
-        <div class="email-label">Email en cours</div>
-
-        <div class="email-row">
-            <div class="email-row-icon">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a09ec0" stroke-width="2" stroke-linecap="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                </svg>
-            </div>
-            <div class="email-row-body">
-                <div class="email-row-key">Expéditeur</div>
-                <div class="email-row-val" id="emailFrom">Chargement…</div>
-            </div>
+    <div class="email-row">
+        <div class="email-row-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a09ec0" stroke-width="2" stroke-linecap="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+            </svg>
         </div>
-
-        <div class="email-row">
-            <div class="email-row-icon">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a09ec0" stroke-width="2" stroke-linecap="round">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                    <polyline points="22,6 12,13 2,6"/>
-                </svg>
-            </div>
-            <div class="email-row-body">
-                <div class="email-row-key">Sujet</div>
-                <div class="email-row-val" id="emailSubject">Chargement…</div>
-            </div>
+        <div class="email-row-body">
+            <div class="email-row-key">Sujet</div>
+            <div class="email-row-val" id="emailSubject">Chargement…</div>
         </div>
     </div>
+</div>
 
-    <!-- ACTIONS -->
-    <div class="actions-wrap">
+<!-- BADGE CONTEXTE ATHENEO -->
+<div class="contexte-badge hidden" id="contexteBadge">
+    <div class="contexte-badge-dot"></div>
+    <div class="contexte-badge-text" id="contexteText">—</div>
+</div>
 
-        <!-- 1. Enregistrer le mail -->
-        <button class="action-card" id="btnSaveMail" onclick="saveMail()">
-            <div class="action-icon-wrap purple">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                    <polyline points="17 21 17 13 7 13 7 21"/>
-                    <polyline points="7 3 7 8 15 8"/>
-                </svg>
-            </div>
-            <div class="action-body">
-                <div class="action-title">Enregistrer le mail</div>
-                <div class="action-desc">Archiver cet email dans ATHENEO (.msg)</div>
-                <div class="action-feedback" id="fbSaveMail"></div>
-            </div>
-            <svg class="action-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
-            <div class="spin"></div>
-        </button>
+<!-- ACTIONS -->
+<div class="actions-wrap">
 
-        <!-- 2. Créer une demande -->
-        <button class="action-card" id="btnCreateDemande" onclick="createDemande()">
-            <div class="action-icon-wrap indigo">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                    <line x1="12" y1="18" x2="12" y2="12"/>
-                    <line x1="9"  y1="15" x2="15" y2="15"/>
-                </svg>
-            </div>
-            <div class="action-body">
-                <div class="action-title">Créer une demande</div>
-                <div class="action-desc">Ouvrir une demande depuis cet email</div>
-                <div class="action-feedback" id="fbCreateDemande"></div>
-            </div>
-            <svg class="action-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
-            <div class="spin"></div>
-        </button>
+    <!-- 1. Enregistrer le mail -->
+    <button class="action-card" id="btnSaveMail" onclick="saveMail()">
+        <div class="action-icon-wrap purple">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+            </svg>
+        </div>
+        <div class="action-body">
+            <div class="action-title">Enregistrer le mail</div>
+            <div class="action-desc">Archiver cet email dans ATHENEO (.eml)</div>
+            <div class="action-feedback" id="fbSaveMail"></div>
+        </div>
+        <svg class="action-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <div class="spin"></div>
+    </button>
 
-        <!-- 3. Ouvrir la fiche interlocuteur -->
-        <button class="action-card" id="btnOpenInterlocuteur" onclick="openFicheInterlocuteur()">
-            <div class="action-icon-wrap teal">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="4" width="20" height="16" rx="2"/>
-                    <circle cx="9" cy="11" r="2.5"/>
-                    <path d="M5 19c0-2.2 1.8-4 4-4"/>
-                    <line x1="14" y1="10" x2="19" y2="10"/>
-                    <line x1="14" y1="14" x2="17" y2="14"/>
-                </svg>
-            </div>
-            <div class="action-body">
-                <div class="action-title">Fiche interlocuteur</div>
-                <div class="action-desc">Consulter la fiche contact dans ATHENEO</div>
-                <div class="action-feedback" id="fbOpenInterlocuteur"></div>
-            </div>
-            <svg class="action-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
-            <div class="spin"></div>
-        </button>
+    <!-- 2. Créer une demande -->
+    <button class="action-card" id="btnCreateDemande" onclick="createDemande()">
+        <div class="action-icon-wrap indigo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/>
+            </svg>
+        </div>
+        <div class="action-body">
+            <div class="action-title">Créer une demande</div>
+            <div class="action-desc">Ouvrir une demande depuis cet email</div>
+            <div class="action-feedback" id="fbCreateDemande"></div>
+        </div>
+        <svg class="action-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <div class="spin"></div>
+    </button>
 
-        <!-- 4. Pièces jointes -->
-        <button class="action-card" id="btnPj" onclick="openPjPanel()">
-            <div class="action-icon-wrap amber">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
-                </svg>
-            </div>
-            <div class="action-body">
-                <div class="action-title">Pièces jointes</div>
-                <div class="action-desc" id="descPj">Sélectionner et enregistrer les PJ</div>
-                <div class="action-feedback" id="fbPj"></div>
-            </div>
-            <svg class="action-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
-            <div class="spin"></div>
-        </button>
+    <!-- 3. Fiche interlocuteur -->
+    <button class="action-card" id="btnOpenInterlocuteur" onclick="openFicheInterlocuteur()">
+        <div class="action-icon-wrap teal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <circle cx="9" cy="11" r="2.5"/>
+                <path d="M5 19c0-2.2 1.8-4 4-4"/>
+                <line x1="14" y1="10" x2="19" y2="10"/><line x1="14" y1="14" x2="17" y2="14"/>
+            </svg>
+        </div>
+        <div class="action-body">
+            <div class="action-title">Fiche interlocuteur</div>
+            <div class="action-desc">Consulter la fiche contact dans ATHENEO</div>
+            <div class="action-feedback" id="fbOpenInterlocuteur"></div>
+        </div>
+        <svg class="action-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <div class="spin"></div>
+    </button>
 
-    </div>
+    <!-- 4. Pièces jointes -->
+    <button class="action-card" id="btnPj" onclick="openPjPanel()">
+        <div class="action-icon-wrap amber">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+            </svg>
+        </div>
+        <div class="action-body">
+            <div class="action-title">Pièces jointes</div>
+            <div class="action-desc" id="descPj">Sélectionner et enregistrer les PJ</div>
+            <div class="action-feedback" id="fbPj"></div>
+        </div>
+        <svg class="action-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <div class="spin"></div>
+    </button>
 
-    <!-- PJ OVERLAY -->
-    <div class="pj-overlay" id="pjOverlay" onclick="handleOverlayClick(event)">
-        <div class="pj-panel">
-            <div class="pj-header">
-                <div>
-                    <div class="pj-header-title">Pièces jointes</div>
-                    <div class="pj-header-sub" id="pjHeaderSub">Chargement…</div>
-                </div>
-                <button class="pj-close-btn" onclick="closePjPanel()">✕</button>
+</div>
+
+<!-- PJ OVERLAY -->
+<div class="pj-overlay" id="pjOverlay" onclick="handleOverlayClick(event)">
+    <div class="pj-panel">
+        <div class="pj-header">
+            <div>
+                <div class="pj-header-title">Pièces jointes</div>
+                <div class="pj-header-sub" id="pjHeaderSub">Chargement…</div>
             </div>
-            <div class="pj-list" id="pjList"></div>
-            <div class="pj-footer">
-                <label class="pj-select-all">
-                    <input type="checkbox" id="checkAll" onchange="toggleAll(this)">
-                    <span>Tout sélectionner</span>
-                </label>
-                <button class="pj-send-btn" id="btnSendPj" onclick="sendSelectedPj()">Enregistrer</button>
-            </div>
+            <button class="pj-close-btn" onclick="closePjPanel()">✕</button>
+        </div>
+        <div class="pj-list" id="pjList"></div>
+        <div class="pj-footer">
+            <label class="pj-select-all">
+                <input type="checkbox" id="checkAll" onchange="toggleAll(this)">
+                <span>Tout sélectionner</span>
+            </label>
+            <button class="pj-send-btn" id="btnSendPj" onclick="sendSelectedPj()">Enregistrer</button>
         </div>
     </div>
+</div>
 
-    <!-- TOAST -->
-    <div class="toast" id="toast">
-        <span class="toast-icon" id="toastIcon"></span>
-        <span class="toast-text" id="toastText"></span>
-    </div>
+<!-- TOAST -->
+<div class="toast" id="toast">
+    <span class="toast-icon" id="toastIcon"></span>
+    <span class="toast-text"  id="toastText"></span>
+</div>
 
-    <script>
-        // ─────────────────────────────────────────────────
-        // CONFIG
-        // ─────────────────────────────────────────────────
-        const API_URL = 'https://api-demo-production-3184.up.railway.app/atheneo/api';
-        const API_KEY = 'VotreCleAPISecrete123';
+<script>
+    // ─────────────────────────────────────────────────
+    // CONFIG
+    // ─────────────────────────────────────────────────
+    const API_URL = 'https://api-demo-production-3184.up.railway.app/atheneo/api';
 
-        // ─────────────────────────────────────────────────
-        // ÉTAT
-        // ─────────────────────────────────────────────────
-        let senderEmail     = '';
-        let senderName      = '';
-        let mailSubject     = '';
-        let mailBody        = '';
-        let mailDate        = null;
-        let mailAttachments = [];
+    // ─────────────────────────────────────────────────
+    // ÉTAT
+    // ─────────────────────────────────────────────────
+    let senderEmail     = '';
+    let senderName      = '';
+    let recipientEmail  = '';   // "to" → utilisé pour récupérer le contexte ATHENEO
+    let mailSubject     = '';
+    let mailBody        = '';
+    let mailDate        = null;
+    let mailAttachments = [];
 
-        // ─────────────────────────────────────────────────
-        // INIT OFFICE
-        // ─────────────────────────────────────────────────
-        Office.onReady(info => {
-            if (info.host === Office.HostType.Outlook) {
-                loadEmailData();
-            }
-        });
-
-        async function loadEmailData() {
-            try {
-                const item = Office.context.mailbox.item;
-
-                // Expéditeur
-                senderEmail = item.from?.emailAddress || '';
-                senderName  = item.from?.displayName  || '';
-
-                if (senderEmail) {
-                    document.getElementById('emailFrom').innerHTML =
-                        `<strong>${escHtml(senderName)}</strong>`
-                        + (senderEmail !== senderName
-                            ? ` <em>${escHtml(senderEmail)}</em>`
-                            : '');
-                } else {
-                    document.getElementById('emailFrom').textContent = 'Expéditeur inconnu';
-                }
-
-                // Sujet
-                mailSubject = item.subject || '(Aucun sujet)';
-                document.getElementById('emailSubject').textContent = mailSubject;
-
-                // Date
-                mailDate = item.dateTimeCreated || new Date();
-
-                // Pièces jointes (on exclut les images inline)
-                mailAttachments = (item.attachments || []).filter(a => !a.isInline);
-                updatePjDesc();
-
-                // Corps (async)
-                const bodyRes = await new Promise(resolve =>
-                    item.body.getAsync(Office.CoercionType.Html, resolve)
-                );
-                if (bodyRes.status === Office.AsyncResultStatus.Succeeded) {
-                    mailBody = bodyRes.value || '';
-                }
-
-            } catch (err) {
-                console.error('loadEmailData:', err);
-                showToast('Erreur lors du chargement du mail', 'error');
-            }
+    // ─────────────────────────────────────────────────
+    // INIT OFFICE
+    // ─────────────────────────────────────────────────
+    Office.onReady(info => {
+        if (info.host === Office.HostType.Outlook) {
+            loadEmailData();
         }
+    });
 
-        function updatePjDesc() {
-            const desc = document.getElementById('descPj');
-            if (!desc) return;
-            const n = mailAttachments.length;
-            desc.textContent = n === 0
-                ? 'Aucune pièce jointe dans ce mail'
-                : `${n} pièce${n > 1 ? 's' : ''} jointe${n > 1 ? 's' : ''} disponible${n > 1 ? 's' : ''}`;
-        }
+    async function loadEmailData() {
+        try {
+            const item = Office.context.mailbox.item;
 
-        // ─────────────────────────────────────────────────
-        // ACTION 1 — Enregistrer le mail
-        // ─────────────────────────────────────────────────
-        async function saveMail() {
-            const btn = document.getElementById('btnSaveMail');
-            const fb  = document.getElementById('fbSaveMail');
+            // Expéditeur (from)
+            senderEmail = item.from?.emailAddress || '';
+            senderName  = item.from?.displayName  || '';
 
-            if (!validateEmail()) return;
-            setLoading(btn, true);
+            document.getElementById('emailFrom').innerHTML = senderEmail
+                ? `<strong>${escHtml(senderName)}</strong>${senderEmail !== senderName ? ` <em>${escHtml(senderEmail)}</em>` : ''}`
+                : 'Expéditeur inconnu';
 
-            try {
-                const res = await apiCall('/mails', 'POST', {
-                    from:      senderEmail,
-                    fromName:  senderName,
-                    subject:   mailSubject,
-                    body:      mailBody,
-                    date:      mailDate?.toISOString(),
-                    messageId: Office.context.mailbox.item.itemId
-                });
+            // Destinataire (to) — utilisé pour chercher le contexte ATHENEO
+            // En lecture de mail, on prend la boîte connectée
+            recipientEmail = Office.context.mailbox.userProfile?.emailAddress || '';
 
-                if (res.success) {
-                    // Archive dans la BDD + génère le fichier .eml local
-                    downloadEml();
-                    fb.textContent = `Archivé · ID ${res.data?.id ?? ''}`;
-                    setCardState(btn, 'done');
-                    showToast('Mail archivé avec succès', 'success');
-                } else {
-                    throw new Error(res.message || 'Réponse inattendue');
-                }
+            // Sujet
+            mailSubject = item.subject || '(Aucun sujet)';
+            document.getElementById('emailSubject').textContent = mailSubject;
 
-            } catch (err) {
-                console.error('saveMail:', err);
-                fb.textContent = err.message;
-                setCardState(btn, 'fail');
-                showToast(`Échec : ${err.message}`, 'error');
-                setTimeout(() => resetCard(btn), 4000);
-            } finally {
-                setLoading(btn, false);
+            // Date
+            mailDate = item.dateTimeCreated || new Date();
+
+            // Pièces jointes (hors inline)
+            mailAttachments = (item.attachments || []).filter(a => !a.isInline);
+            updatePjDesc();
+
+            // Corps (async)
+            const bodyRes = await new Promise(resolve =>
+                item.body.getAsync(Office.CoercionType.Html, resolve)
+            );
+            if (bodyRes.status === Office.AsyncResultStatus.Succeeded) {
+                mailBody = bodyRes.value || '';
             }
-        }
 
-        function downloadEml() {
-            try {
-                const dateStr  = mailDate ? mailDate.toUTCString() : new Date().toUTCString();
-                const eml      =
-                    `MIME-Version: 1.0\r\n` +
-                    `Date: ${dateStr}\r\n` +
-                    `From: ${senderName} <${senderEmail}>\r\n` +
-                    `Subject: ${mailSubject}\r\n` +
-                    `Content-Type: text/html; charset=UTF-8\r\n\r\n` +
-                    mailBody;
-
-                const safeName = mailSubject.replace(/[^a-zA-Z0-9\- _]/g, '_').slice(0, 60);
-                const blob     = new Blob([eml], { type: 'message/rfc822' });
-                const url      = URL.createObjectURL(blob);
-                const a        = Object.assign(document.createElement('a'), {
-                    href:     url,
-                    download: `${safeName}.eml`
-                });
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            } catch (err) {
-                console.warn('downloadEml:', err);
+            // Contexte ATHENEO du destinataire (best-effort)
+            if (recipientEmail) {
+                loadContexte(recipientEmail);
             }
+
+        } catch (err) {
+            console.error('loadEmailData:', err);
+            showToast('Erreur lors du chargement du mail', 'error');
         }
+    }
 
-        // ─────────────────────────────────────────────────
-        // ACTION 2 — Créer une demande
-        // ─────────────────────────────────────────────────
-        async function createDemande() {
-            const btn = document.getElementById('btnCreateDemande');
-            const fb  = document.getElementById('fbCreateDemande');
-
-            if (!validateEmail()) return;
-            setLoading(btn, true);
-
-            try {
-                const res = await apiCall('/demandes', 'POST', {
-                    email:       senderEmail,
-                    contactName: senderName,
-                    subject:     mailSubject,
-                    description: mailBody,
-                    source:      'outlook_addin',
-                    priority:    'normale',
-                    type:        'email'
-                });
-
-                if (res.success) {
-                    const ref = res.data?.reference ?? '';
-                    fb.textContent = `Demande créée · ${ref}`;
-                    setCardState(btn, 'done');
-                    showToast(`Demande ${ref} créée avec succès`, 'success');
-                } else {
-                    throw new Error(res.message || 'Réponse inattendue');
-                }
-
-            } catch (err) {
-                console.error('createDemande:', err);
-                fb.textContent = err.message;
-                setCardState(btn, 'fail');
-                showToast(`Échec : ${err.message}`, 'error');
-                setTimeout(() => resetCard(btn), 4000);
-            } finally {
-                setLoading(btn, false);
+    async function loadContexte(email) {
+        try {
+            const res = await apiCall(`/interlocuteurs/contexte?email=${encodeURIComponent(email)}`, 'GET');
+            if (res.success && res.data?.module) {
+                document.getElementById('contexteText').textContent = res.data.module;
+                document.getElementById('contexteBadge').classList.remove('hidden');
             }
+        } catch (_) {
+            // Silencieux — le contexte est indicatif
         }
+    }
 
-        // ─────────────────────────────────────────────────
-        // ACTION 3 — Ouvrir la fiche interlocuteur
-        // ─────────────────────────────────────────────────
-        async function openFicheInterlocuteur() {
-            const btn = document.getElementById('btnOpenInterlocuteur');
-            const fb  = document.getElementById('fbOpenInterlocuteur');
+    function updatePjDesc() {
+        const desc = document.getElementById('descPj');
+        if (!desc) return;
+        const n = mailAttachments.length;
+        desc.textContent = n === 0
+            ? 'Aucune pièce jointe dans ce mail'
+            : `${n} pièce${n > 1 ? 's' : ''} jointe${n > 1 ? 's' : ''} disponible${n > 1 ? 's' : ''}`;
+    }
 
-            if (!validateEmail()) return;
-            setLoading(btn, true);
+    // ─────────────────────────────────────────────────
+    // ACTION 1 — Enregistrer le mail
+    // ─────────────────────────────────────────────────
+    async function saveMail() {
+        const btn = document.getElementById('btnSaveMail');
+        const fb  = document.getElementById('fbSaveMail');
+        if (!validateEmail()) return;
+        setLoading(btn, true);
 
-            try {
-                const res = await apiCall(
-                    `/interlocuteurs?email=${encodeURIComponent(senderEmail)}`,
-                    'GET'
-                );
+        try {
+            const emlBlob = buildEmlBlob();
+            const formData = new FormData();
+            formData.append('file',      emlBlob, 'mail.eml');
+            formData.append('to',        recipientEmail);
+            formData.append('from',      senderEmail);
+            formData.append('fromName',  senderName);
+            formData.append('subject',   mailSubject);
+            formData.append('body',      mailBody);
+            formData.append('date',      mailDate?.toISOString());
 
-                if (res.success && res.data?.id) {
-                    const id  = res.data.id;
-                    const url = `ath:Consulter?INTERLOC/${id}`;
-                    window.location.href = url;
-                    fb.textContent = `Interlocuteur #${id} ouvert`;
-                    setCardState(btn, 'done');
-                    showToast('Ouverture de la fiche interlocuteur…', 'success');
-                    setTimeout(() => resetCard(btn), 3500);
-                } else {
-                    throw new Error(res.message || 'Interlocuteur non trouvé pour cet email');
-                }
+            const res = await fetchFormData('/mails', formData);
 
-            } catch (err) {
-                console.error('openFicheInterlocuteur:', err);
-                fb.textContent = err.message;
-                setCardState(btn, 'fail');
-                showToast(`Échec : ${err.message}`, 'error');
-                setTimeout(() => resetCard(btn), 4000);
-            } finally {
-                setLoading(btn, false);
-            }
-        }
-
-        // ─────────────────────────────────────────────────
-        // ACTION 4 — Pièces jointes (panel de sélection)
-        // ─────────────────────────────────────────────────
-        function openPjPanel() {
-            const list = document.getElementById('pjList');
-            list.innerHTML = '';
-            document.getElementById('checkAll').checked = false;
-
-            if (mailAttachments.length === 0) {
-                list.innerHTML = `
-                    <div class="pj-empty">
-                        <div class="pj-empty-icon">📎</div>
-                        <div>Aucune pièce jointe dans ce mail</div>
-                    </div>`;
-                document.getElementById('pjHeaderSub').textContent = '0 fichier';
-                document.getElementById('btnSendPj').disabled = true;
+            if (res.success) {
+                fb.textContent = `Archivé · ID ${res.data?.id ?? ''}`;
+                setCardState(btn, 'done');
+                showToast('Mail archivé avec succès', 'success');
             } else {
-                document.getElementById('pjHeaderSub').textContent =
-                    `${mailAttachments.length} fichier${mailAttachments.length > 1 ? 's' : ''}`;
-                document.getElementById('btnSendPj').disabled = false;
-
-                mailAttachments.forEach(att => {
-                    const label = document.createElement('label');
-                    label.className = 'pj-item';
-                    label.innerHTML =
-                        `<input type="checkbox" class="pj-checkbox"` +
-                        ` data-id="${escAttr(att.id)}"` +
-                        ` data-name="${escAttr(att.name)}"` +
-                        ` data-size="${att.size || 0}"` +
-                        ` data-type="${escAttr(att.contentType || 'application/octet-stream')}">` +
-                        `<div class="pj-item-icon">${getFileIcon(att.name)}</div>` +
-                        `<div class="pj-item-body">` +
-                        `<div class="pj-item-name">${escHtml(att.name)}</div>` +
-                        `<div class="pj-item-meta">${formatSize(att.size)}</div>` +
-                        `</div>`;
-                    list.appendChild(label);
-                });
+                throw new Error(res.message || 'Réponse inattendue');
             }
 
-            document.getElementById('pjOverlay').classList.add('visible');
+        } catch (err) {
+            console.error('saveMail:', err);
+            fb.textContent = err.message;
+            setCardState(btn, 'fail');
+            showToast(`Échec : ${err.message}`, 'error');
+            setTimeout(() => resetCard(btn), 4000);
+        } finally {
+            setLoading(btn, false);
         }
+    }
 
-        function closePjPanel() {
-            document.getElementById('pjOverlay').classList.remove('visible');
+    function buildEmlBlob() {
+        const dateStr = mailDate ? mailDate.toUTCString() : new Date().toUTCString();
+        const eml =
+            `MIME-Version: 1.0\r\n` +
+            `Date: ${dateStr}\r\n` +
+            `From: ${senderName} <${senderEmail}>\r\n` +
+            `Subject: ${mailSubject}\r\n` +
+            `Content-Type: text/html; charset=UTF-8\r\n\r\n` +
+            mailBody;
+        return new Blob([eml], { type: 'message/rfc822' });
+    }
+
+    // ─────────────────────────────────────────────────
+    // ACTION 2 — Créer une demande
+    // ─────────────────────────────────────────────────
+    async function createDemande() {
+        const btn = document.getElementById('btnCreateDemande');
+        const fb  = document.getElementById('fbCreateDemande');
+        if (!validateEmail()) return;
+        setLoading(btn, true);
+
+        try {
+            const res = await apiCall('/demandes', 'POST', {
+                email:       senderEmail,
+                contactName: senderName,
+                subject:     mailSubject,
+                description: mailBody,
+                source:      'outlook_addin',
+                priority:    'normale',
+                type:        'email'
+            });
+
+            if (res.success) {
+                const id  = res.data?.id ?? res.data?.reference ?? '';
+                fb.textContent = `Demande créée · #${id}`;
+                setCardState(btn, 'done');
+                showToast(`Demande #${id} créée — ouverture…`, 'success');
+
+                // Ouverture dans ATHENEO
+                if (id) {
+                    setTimeout(() => { window.location.href = `ath:Consulter?DEMANDE/${id}`; }, 800);
+                }
+            } else {
+                throw new Error(res.message || 'Réponse inattendue');
+            }
+
+        } catch (err) {
+            console.error('createDemande:', err);
+            fb.textContent = err.message;
+            setCardState(btn, 'fail');
+            showToast(`Échec : ${err.message}`, 'error');
+            setTimeout(() => resetCard(btn), 4000);
+        } finally {
+            setLoading(btn, false);
         }
+    }
 
-        function handleOverlayClick(e) {
-            if (e.target === document.getElementById('pjOverlay')) closePjPanel();
+    // ─────────────────────────────────────────────────
+    // ACTION 3 — Fiche interlocuteur (from)
+    // ─────────────────────────────────────────────────
+    async function openFicheInterlocuteur() {
+        const btn = document.getElementById('btnOpenInterlocuteur');
+        const fb  = document.getElementById('fbOpenInterlocuteur');
+        if (!validateEmail()) return;
+        setLoading(btn, true);
+
+        try {
+            const res = await apiCall(
+                `/interlocuteurs?email=${encodeURIComponent(senderEmail)}`,
+                'GET'
+            );
+
+            if (res.success && res.data?.id) {
+                const id = res.data.id;
+                fb.textContent = `Interlocuteur #${id} — ouverture…`;
+                setCardState(btn, 'done');
+                showToast('Ouverture de la fiche interlocuteur…', 'success');
+                setTimeout(() => { window.location.href = `ath:Consulter?INTERLOC/${id}`; }, 800);
+            } else {
+                throw new Error(res.message || 'Interlocuteur non trouvé pour cet email');
+            }
+
+        } catch (err) {
+            console.error('openFicheInterlocuteur:', err);
+            fb.textContent = err.message;
+            setCardState(btn, 'fail');
+            showToast(`Échec : ${err.message}`, 'error');
+            setTimeout(() => resetCard(btn), 4000);
+        } finally {
+            setLoading(btn, false);
         }
+    }
 
-        function toggleAll(masterCb) {
-            document.querySelectorAll('.pj-checkbox').forEach(cb => {
-                cb.checked = masterCb.checked;
+    // ─────────────────────────────────────────────────
+    // ACTION 4 — Pièces jointes
+    // ─────────────────────────────────────────────────
+    function openPjPanel() {
+        const list = document.getElementById('pjList');
+        list.innerHTML = '';
+        document.getElementById('checkAll').checked = false;
+
+        if (mailAttachments.length === 0) {
+            list.innerHTML = `<div class="pj-empty"><div class="pj-empty-icon">📎</div><div>Aucune pièce jointe dans ce mail</div></div>`;
+            document.getElementById('pjHeaderSub').textContent = '0 fichier';
+            document.getElementById('btnSendPj').disabled = true;
+        } else {
+            document.getElementById('pjHeaderSub').textContent =
+                `${mailAttachments.length} fichier${mailAttachments.length > 1 ? 's' : ''}`;
+            document.getElementById('btnSendPj').disabled = false;
+
+            mailAttachments.forEach(att => {
+                const label = document.createElement('label');
+                label.className = 'pj-item';
+                label.innerHTML =
+                    `<input type="checkbox" class="pj-checkbox"` +
+                    ` data-id="${escAttr(att.id)}"` +
+                    ` data-name="${escAttr(att.name)}"` +
+                    ` data-size="${att.size || 0}"` +
+                    ` data-type="${escAttr(att.contentType || 'application/octet-stream')}">` +
+                    `<div class="pj-item-icon">${getFileIcon(att.name)}</div>` +
+                    `<div class="pj-item-body">` +
+                    `<div class="pj-item-name">${escHtml(att.name)}</div>` +
+                    `<div class="pj-item-meta">${formatSize(att.size)}</div>` +
+                    `</div>`;
+                list.appendChild(label);
             });
         }
 
-        async function sendSelectedPj() {
-            const checked = Array.from(document.querySelectorAll('.pj-checkbox:checked'));
-            if (checked.length === 0) {
-                showToast('Sélectionnez au moins une pièce jointe', 'error');
-                return;
-            }
+        document.getElementById('pjOverlay').classList.add('visible');
+    }
 
-            const sendBtn = document.getElementById('btnSendPj');
-            sendBtn.disabled = true;
-            sendBtn.textContent = 'Envoi…';
+    function closePjPanel()          { document.getElementById('pjOverlay').classList.remove('visible'); }
+    function handleOverlayClick(e)   { if (e.target === document.getElementById('pjOverlay')) closePjPanel(); }
+    function toggleAll(masterCb)     { document.querySelectorAll('.pj-checkbox').forEach(cb => cb.checked = masterCb.checked); }
 
-            try {
-                const attachments = checked.map(cb => ({
-                    name:        cb.dataset.name,
-                    size:        parseInt(cb.dataset.size, 10) || 0,
-                    contentType: cb.dataset.type,
-                    id:          cb.dataset.id
-                }));
+    async function sendSelectedPj() {
+        const checked = Array.from(document.querySelectorAll('.pj-checkbox:checked'));
+        if (checked.length === 0) { showToast('Sélectionnez au moins une pièce jointe', 'error'); return; }
 
-                const res = await apiCall('/pieces-jointes', 'POST', {
-                    attachments,
-                    emailFrom:    senderEmail,
-                    emailSubject: mailSubject
-                });
+        const sendBtn = document.getElementById('btnSendPj');
+        sendBtn.disabled = true;
+        sendBtn.textContent = 'Envoi…';
 
-                if (res.success) {
-                    closePjPanel();
-                    const n   = checked.length;
-                    const btn = document.getElementById('btnPj');
-                    const fb  = document.getElementById('fbPj');
-                    fb.textContent = `${n} PJ${n > 1 ? 's' : ''} enregistrée${n > 1 ? 's' : ''}`;
-                    setCardState(btn, 'done');
-                    showToast(
-                        `${n} pièce${n > 1 ? 's' : ''} jointe${n > 1 ? 's' : ''} enregistrée${n > 1 ? 's' : ''}`,
-                        'success'
-                    );
-                } else {
-                    throw new Error(res.message || "Erreur lors de l'envoi");
-                }
+        try {
+            // Récupération du contenu binaire de chaque PJ via l'API Office
+            const formData = new FormData();
+            formData.append('to',      recipientEmail);
+            formData.append('from',    senderEmail);
+            formData.append('subject', mailSubject);
 
-            } catch (err) {
-                console.error('sendSelectedPj:', err);
-                showToast(`Échec : ${err.message}`, 'error');
-            } finally {
-                sendBtn.disabled = false;
-                sendBtn.textContent = 'Enregistrer';
-            }
-        }
-
-        // ─────────────────────────────────────────────────
-        // HELPERS UI
-        // ─────────────────────────────────────────────────
-        function setLoading(btn, on) {
-            btn.classList.toggle('loading', on);
-        }
-
-        function setCardState(btn, state) {
-            btn.classList.remove('done', 'fail');
-            if (state) btn.classList.add(state);
-        }
-
-        function resetCard(btn) {
-            btn.classList.remove('done', 'fail');
-            const fb = btn.querySelector('.action-feedback');
-            if (fb) fb.textContent = '';
-        }
-
-        let toastTimer;
-        function showToast(msg, type) {
-            const el   = document.getElementById('toast');
-            const icon = document.getElementById('toastIcon');
-            const text = document.getElementById('toastText');
-            icon.textContent = type === 'success' ? '✓' : '✕';
-            text.textContent = msg;
-            el.className = `toast show ${type}`;
-            clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => el.classList.remove('show'), 4500);
-        }
-
-        function getFileIcon(name) {
-            const ext = String(name || '').split('.').pop().toLowerCase();
-            const map = {
-                pdf: '📄', doc: '📝', docx: '📝',
-                xls: '📊', xlsx: '📊', csv: '📊',
-                png: '🖼️', jpg: '🖼️', jpeg: '🖼️', gif: '🖼️', webp: '🖼️',
-                zip: '📦', rar: '📦', gz: '📦',
-                ppt: '📋', pptx: '📋',
-                txt: '📃', msg: '✉️', eml: '✉️'
-            };
-            return map[ext] || '📎';
-        }
-
-        function formatSize(bytes) {
-            if (!bytes || bytes === 0) return '—';
-            const k = 1024;
-            const u = ['o', 'Ko', 'Mo', 'Go'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + '\u00a0' + u[i];
-        }
-
-        // ─────────────────────────────────────────────────
-        // HELPERS API
-        // ─────────────────────────────────────────────────
-        async function apiCall(endpoint, method, data, retries = 1) {
-            let lastErr;
-            for (let i = 0; i <= retries; i++) {
-                try {
-                    const opts = {
-                        method,
-                        headers: {
-                            'Content-Type':  'application/json',
-                            'Authorization': `Bearer ${API_KEY}`
+            await Promise.all(checked.map(cb =>
+                new Promise((resolve, reject) => {
+                    Office.context.mailbox.item.getAttachmentContentAsync(
+                        cb.dataset.id,
+                        { asyncContext: cb.dataset.name },
+                        result => {
+                            if (result.status === Office.AsyncResultStatus.Succeeded) {
+                                const content = result.value;
+                                let blob;
+                                if (content.format === Office.MailboxEnums.AttachmentContentFormat.Base64) {
+                                    const bytes = Uint8Array.from(atob(content.content), c => c.charCodeAt(0));
+                                    blob = new Blob([bytes], { type: cb.dataset.type });
+                                } else {
+                                    blob = new Blob([content.content], { type: cb.dataset.type });
+                                }
+                                formData.append('files', blob, cb.dataset.name);
+                                resolve();
+                            } else {
+                                reject(new Error(`Impossible de récupérer ${cb.dataset.name}`));
+                            }
                         }
-                    };
-                    if (data) opts.body = JSON.stringify(data);
-                    const res = await fetch(`${API_URL}${endpoint}`, opts);
-                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                    return await res.json();
-                } catch (err) {
-                    lastErr = err;
-                    if (i < retries && !String(err.message).startsWith('HTTP 4'))
-                        await wait((i + 1) * 1200);
-                    else break;
-                }
+                    );
+                })
+            ));
+
+            const res = await fetchFormData('/pieces-jointes', formData);
+
+            if (res.success) {
+                closePjPanel();
+                const n   = checked.length;
+                const btn = document.getElementById('btnPj');
+                const fb  = document.getElementById('fbPj');
+                fb.textContent = `${n} PJ${n > 1 ? 's' : ''} enregistrée${n > 1 ? 's' : ''}`;
+                setCardState(btn, 'done');
+                showToast(`${n} pièce${n > 1 ? 's' : ''} jointe${n > 1 ? 's' : ''} enregistrée${n > 1 ? 's' : ''}`, 'success');
+            } else {
+                throw new Error(res.message || "Erreur lors de l'envoi");
             }
-            throw lastErr;
-        }
 
-        function validateEmail() {
-            if (!senderEmail || !senderEmail.includes('@')) {
-                showToast('Expéditeur introuvable — rechargez le volet', 'error');
-                return false;
+        } catch (err) {
+            console.error('sendSelectedPj:', err);
+            showToast(`Échec : ${err.message}`, 'error');
+        } finally {
+            sendBtn.disabled = false;
+            sendBtn.textContent = 'Enregistrer';
+        }
+    }
+
+    // ─────────────────────────────────────────────────
+    // HELPERS API
+    // ─────────────────────────────────────────────────
+    async function apiCall(endpoint, method, data, retries = 1) {
+        let lastErr;
+        for (let i = 0; i <= retries; i++) {
+            try {
+                const opts = { method, headers: { 'Content-Type': 'application/json' } };
+                if (data) opts.body = JSON.stringify(data);
+                const res = await fetch(`${API_URL}${endpoint}`, opts);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return await res.json();
+            } catch (err) {
+                lastErr = err;
+                if (i < retries && !String(err.message).startsWith('HTTP 4'))
+                    await wait((i + 1) * 1200);
+                else break;
             }
-            return true;
         }
+        throw lastErr;
+    }
 
-        function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+    async function fetchFormData(endpoint, formData) {
+        const res = await fetch(`${API_URL}${endpoint}`, { method: 'POST', body: formData });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+    }
 
-        function escHtml(s) {
-            return String(s)
-                .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    function validateEmail() {
+        if (!senderEmail || !senderEmail.includes('@')) {
+            showToast('Expéditeur introuvable — rechargez le volet', 'error');
+            return false;
         }
+        return true;
+    }
 
-        function escAttr(s) {
-            return String(s || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-        }
-    </script>
+    function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // ─────────────────────────────────────────────────
+    // HELPERS UI
+    // ─────────────────────────────────────────────────
+    function setLoading(btn, on)        { btn.classList.toggle('loading', on); }
+    function setCardState(btn, state)   { btn.classList.remove('done', 'fail'); if (state) btn.classList.add(state); }
+    function resetCard(btn)             { btn.classList.remove('done', 'fail'); const fb = btn.querySelector('.action-feedback'); if (fb) fb.textContent = ''; }
+
+    let toastTimer;
+    function showToast(msg, type) {
+        const el = document.getElementById('toast');
+        document.getElementById('toastIcon').textContent = type === 'success' ? '✓' : '✕';
+        document.getElementById('toastText').textContent = msg;
+        el.className = `toast show ${type}`;
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.remove('show'), 4500);
+    }
+
+    function getFileIcon(name) {
+        const ext = String(name || '').split('.').pop().toLowerCase();
+        const map = { pdf:'📄',doc:'📝',docx:'📝',xls:'📊',xlsx:'📊',csv:'📊',png:'🖼️',jpg:'🖼️',jpeg:'🖼️',gif:'🖼️',webp:'🖼️',zip:'📦',rar:'📦',gz:'📦',ppt:'📋',pptx:'📋',txt:'📃',msg:'✉️',eml:'✉️' };
+        return map[ext] || '📎';
+    }
+
+    function formatSize(bytes) {
+        if (!bytes || bytes === 0) return '—';
+        const k = 1024, u = ['o','Ko','Mo','Go'], i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + '\u00a0' + u[i];
+    }
+
+    function escHtml(s)  { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    function escAttr(s)  { return String(s||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+</script>
 </body>
 </html>

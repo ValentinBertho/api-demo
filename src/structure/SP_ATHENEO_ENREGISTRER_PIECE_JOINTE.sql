@@ -78,39 +78,8 @@ BEGIN
         AND ISNULL(ACTIF, 1) = 1
     END
 
-    -- Insertion de la piece jointe dans la table PIECE
-    INSERT INTO PIECE (
-        NO_INTERLO,
-        REFERENCE,
-        OBJET,
-        CREER_LE,
-        CREER_PAR,
-        MODIF_LE,
-        MODIF_PAR,
-        MODIFIABLE,
-        C1,
-        C2,
-        C3,
-        C4,
-        C5
-    )
-    VALUES (
-        @V_NO_INTERLO,
-        @V_REFERENCE,
-        LEFT(ISNULL(@NOM_FICHIER, ''), 200),                 -- OBJET = nom complet fichier
-        GETDATE(),
-        @V_UTILISATEUR,
-        GETDATE(),
-        @V_UTILISATEUR,
-        1,
-        LEFT(ISNULL(@TYPE_MIME, ''), 100),                   -- C1 = Type MIME
-        LEFT(ISNULL(CAST(@TAILLE AS varchar(20)), ''), 100), -- C2 = Taille en octets
-        LEFT(ISNULL(@ID_OUTLOOK, ''), 100),                  -- C3 = ID Outlook
-        LEFT(ISNULL(@EMAIL_SOURCE, ''), 100),                -- C4 = Email source
-        LEFT(ISNULL(@SUJET_MAIL, ''), 100)                   -- C5 = Sujet du mail
-    )
 
-    SET @PIECE_JOINTE_ID = SCOPE_IDENTITY()
+
 
 END
 GO

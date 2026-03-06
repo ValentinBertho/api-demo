@@ -21,7 +21,7 @@
 #define AppName      "ATHENEO Outlook Add-in API"
 #define AppVersion   "1.0.0"
 #define AppPublisher "MISMO / ATHENEO"
-#define AppID        "{D4F5E6A7-8B9C-0D1E-2F3A-4B5C6D7E8F9A}"
+#define AppID        "D4F5E6A7-8B9C-0D1E-2F3A-4B5C6D7E8F9A"
 #define AppExeName   "atheneo-demo-api-1.0.0.jar"
 #define ServiceName  "AtheneoOutlookAPI"
 
@@ -194,10 +194,10 @@ begin
 end;
 
 { ── WriteApplicationYml ─────────────────────────────────────
-  Genere le fichier application.yml dans {app}\config\ a partir
+  Genere le fichier application.yml dans app config a partir
   des champs saisis dans la page de configuration du wizard.
   Appele uniquement depuis CurStepChanged(ssPostInstall), moment
-  ou la constante {app} est garantie d'etre resolue.
+  ou la constante app est garantie d'etre resolue.
   ─────────────────────────────────────────────────────────── }
 procedure WriteApplicationYml(const DestPath: String);
 var
@@ -340,7 +340,7 @@ begin
 end;
 
 { ── GetPortValue ─────────────────────────────────────────────
-  Fonction de rappel pour les constantes {code:} dans [Icons].
+  Fonction de rappel pour les constantes code: dans [Icons].
   ─────────────────────────────────────────────────────────── }
 function GetPortValue(Param: String): String;
 begin
@@ -374,7 +374,7 @@ end;
   Cree la page de configuration et pre-remplit les champs si
   une installation precedente est detectee via le registre.
 
-  IMPORTANT : {app} n'est PAS encore disponible ici car le
+  IMPORTANT : appn'est PAS encore disponible ici car le
   wizard n'a pas demande le repertoire d'installation.
   On utilise le registre pour trouver le chemin precedent.
   ─────────────────────────────────────────────────────────── }
@@ -579,7 +579,7 @@ end;
 
 { ── CurStepChanged ──────────────────────────────────────────
   Ecriture du fichier application.yml apres copie des fichiers.
-  A ce stade, {app} est resolu et le dossier de destination existe.
+  A ce stade, app est resolu et le dossier de destination existe.
   ─────────────────────────────────────────────────────────── }
 procedure CurStepChanged(CurStep: TSetupStep);
 var

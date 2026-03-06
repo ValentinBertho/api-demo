@@ -1,0 +1,1 @@
+.\interface-facture.exe uninstall

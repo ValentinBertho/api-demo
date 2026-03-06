@@ -79,8 +79,7 @@ BEGIN
         MODIF_LE,
         MODIF_PAR,
         MODIFIABLE,
-        C1,
-        SOURCE
+        C1
     )
     VALUES (
         @V_NO_INTERLO,
@@ -94,8 +93,7 @@ BEGIN
         GETDATE(),
         @V_UTILISATEUR,
         1,
-        LEFT(ISNULL(@EXPEDITEUR_NOM, ''), 100),  -- C1 = nom expediteur
-        'OUTLOOK_ADDIN'
+        LEFT(ISNULL(@EXPEDITEUR_NOM, ''), 100)
     )
 
     SET @EMAIL_ID = SCOPE_IDENTITY()
