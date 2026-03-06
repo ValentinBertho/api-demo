@@ -1,0 +1,48 @@
+services:
+
+  # ────────────────────────────────────────────────────────────
+  #  ATHENEO Demo API
+  #  Build depuis les sources Maven
+  #  Accessible sur http://localhost:8080/atheneo/api
+  # ────────────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: atheneo-api
+    ports:
+      - "8080:8080"
+    environment:
+      # ── Serveur ──────────────────────────────────────────────
+      PORT: 8080
+
+      # ── Base de données SQL Server ────────────────────────────
+      # Pointez vers votre instance ATHENEO SQL Server existante.
+      # Exemple : jdbc:sqlserver://192.168.1.10\SQL2022;databaseName=ATH_ERP_V17_1;encrypt=false
+      DB_URL: jdbc:sqlserver://${DB_HOST:-NA-ATHERP\\SQL2022};databaseName=${DB_NAME:-ATH_ERP_V17_1};encrypt=false
+      DB_USERNAME: ${DB_USERNAME:-atheneo_sql}
+      DB_PASSWORD: ${DB_PASSWORD:-}
+
+      # ── Service SOAP WSDocument ───────────────────────────────
+      WS_DOCUMENT_URI: ${WS_DOCUMENT_URI:-http://mon-serveur-atheneo/WSDocument}
+      WS_DOCUMENT_LOGIN: ${WS_DOCUMENT_LOGIN:-}
+      WS_DOCUMENT_PASSWORD: ${WS_DOCUMENT_PASSWORD:-}
+
+      # ── Spring Profiles ───────────────────────────────────────
+      # Utiliser "dev" pour désactiver le service SOAP (tests sans ERP)
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-default}
+
+    volumes:
+      # Répertoire d'archivage des .eml (persistance entre redémarrages)
+      - atheneo-archives:/app/archives
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/atheneo/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  atheneo-archives:
+    driver: local

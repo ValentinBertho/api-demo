@@ -1,0 +1,327 @@
+{
+  "info": {
+    "_postman_id": "atheneo-demo-api-collection",
+    "name": "ATHENEO Demo API",
+    "description": "Collection complète pour l'API REST de l'Add-in Outlook ATHENEO.\n\n**Base URL :** `{{baseUrl}}`\n\n**Variable à configurer :**\n- `baseUrl` : URL de base de l'API (ex: `http://localhost:8080/atheneo/api`)\n- `conseillerEmail` : e-mail du conseiller ATHENEO destinataire\n- `clientEmail` : e-mail du client / expéditeur",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/atheneo/api",
+      "type": "string",
+      "description": "URL de base de l'API. Changer pour pointer vers l'environnement souhaité."
+    },
+    {
+      "key": "conseillerEmail",
+      "value": "conseiller@atheneo.fr",
+      "type": "string",
+      "description": "E-mail du conseiller ATHENEO (destinataire des e-mails Outlook)"
+    },
+    {
+      "key": "clientEmail",
+      "value": "client@example.com",
+      "type": "string",
+      "description": "E-mail du client / expéditeur"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET /health — Vérification de l'état du service",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Retourne le statut du service ainsi que la date et heure courante.\n\n**Réponse attendue :**\n```json\n{\n  \"status\": \"ok\",\n  \"service\": \"ATHENEO Demo API\",\n  \"timestamp\": \"2024-01-15T10:30:00\"\n}\n```"
+          },
+          "response": [
+            {
+              "name": "200 — Service opérationnel",
+              "originalRequest": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{baseUrl}}/health"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"status\": \"ok\",\n  \"service\": \"ATHENEO Demo API\",\n  \"timestamp\": \"2024-01-15T10:30:00\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mails",
+      "item": [
+        {
+          "name": "POST /mails — Enregistrer un e-mail",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": [],
+                  "description": "Fichier .eml de l'e-mail à archiver (obligatoire)"
+                },
+                {
+                  "key": "to",
+                  "value": "{{conseillerEmail}}",
+                  "type": "text",
+                  "description": "E-mail du destinataire (conseiller ATHENEO connecté)"
+                },
+                {
+                  "key": "from",
+                  "value": "{{clientEmail}}",
+                  "type": "text",
+                  "description": "E-mail de l'expéditeur"
+                },
+                {
+                  "key": "fromName",
+                  "value": "Jean Dupont",
+                  "type": "text",
+                  "description": "Nom affiché de l'expéditeur"
+                },
+                {
+                  "key": "subject",
+                  "value": "Demande d'intervention urgente",
+                  "type": "text",
+                  "description": "Objet de l'e-mail"
+                },
+                {
+                  "key": "body",
+                  "value": "<p>Bonjour,</p><p>Suite à notre entretien téléphonique, je reviens vers vous...</p>",
+                  "type": "text",
+                  "description": "Corps HTML de l'e-mail"
+                },
+                {
+                  "key": "date",
+                  "value": "2024-01-15T10:30:00",
+                  "type": "text",
+                  "description": "Date de réception au format ISO-8601"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/mails",
+              "host": ["{{baseUrl}}"],
+              "path": ["mails"]
+            },
+            "description": "Enregistre le fichier mail (.eml) dans ATHENEO sur le contexte courant de l'utilisateur destinataire.\n\n**Flux interne :**\n1. Récupère le module actif du destinataire `to`\n2. Parse le contexte → clé/valeur ATHENEO (ex: `NO_DEVIS=69392`)\n3. Téléverse le fichier via WSDocument (SOAP)\n4. Enregistre les métadonnées via `SP_ATHENEO_ENREGISTRER_MAIL`"
+          },
+          "response": [
+            {
+              "name": "200 — E-mail enregistré",
+              "originalRequest": {
+                "method": "POST",
+                "url": { "raw": "{{baseUrl}}/mails" }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"message\": \"Mail enregistré\",\n  \"data\": {\n    \"email_id\": 1042,\n    \"expediteur\": \"client@example.com\",\n    \"sujet\": \"Demande d'intervention urgente\"\n  }\n}"
+            },
+            {
+              "name": "500 — Erreur téléversement",
+              "originalRequest": {
+                "method": "POST",
+                "url": { "raw": "{{baseUrl}}/mails" }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": false,\n  \"message\": \"Erreur lors du téléversement du fichier\",\n  \"data\": null\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Interlocuteurs",
+      "item": [
+        {
+          "name": "GET /interlocuteurs — Rechercher un contact",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/interlocuteurs?email={{clientEmail}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["interlocuteurs"],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "{{clientEmail}}",
+                  "description": "Adresse e-mail du contact à rechercher dans ATHENEO"
+                }
+              ]
+            },
+            "description": "Recherche un interlocuteur ATHENEO à partir de son adresse e-mail.\n\nEn cas de succès, le front-end utilise l'identifiant retourné pour construire :\n`ath:Consulter?INTERLOC/{id}`"
+          },
+          "response": [
+            {
+              "name": "200 — Interlocuteur trouvé",
+              "originalRequest": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{baseUrl}}/interlocuteurs?email=client@example.com"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"message\": \"Interlocuteur trouvé\",\n  \"data\": {\n    \"id\": 312,\n    \"nom\": \"Dupont\",\n    \"prenom\": \"Jean\",\n    \"email\": \"client@example.com\",\n    \"telephone\": \"0123456789\",\n    \"telephonePortable\": \"0612345678\",\n    \"societe\": \"Example Corp\",\n    \"noSociete\": 47,\n    \"actif\": true,\n    \"dateCreation\": \"2023-05-10T09:00:00\",\n    \"dateModification\": \"2024-01-10T14:00:00\"\n  }\n}"
+            },
+            {
+              "name": "200 — Interlocuteur non trouvé",
+              "originalRequest": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{baseUrl}}/interlocuteurs?email=inconnu@example.com"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": false,\n  \"message\": \"Interlocuteur non trouvé\",\n  \"data\": null\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Demandes",
+      "item": [
+        {
+          "name": "POST /demandes — Créer une demande (incident)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{clientEmail}}\",\n  \"contactName\": \"Jean Dupont\",\n  \"subject\": \"Panne sur le module de facturation\",\n  \"description\": \"Depuis ce matin, impossible d'accéder à la liste des factures. Le message d'erreur indique une connexion refusée.\",\n  \"source\": \"EMAIL\",\n  \"priority\": \"HAUTE\",\n  \"type\": \"INCIDENT\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/demandes",
+              "host": ["{{baseUrl}}"],
+              "path": ["demandes"]
+            },
+            "description": "Crée une demande ATHENEO à partir des données d'un e-mail reçu.\n\nLa procédure stockée `SP_ATHENEO_CREER_DEMANDE` est appelée en interne.\nLe front-end utilise ensuite l'identifiant retourné pour construire :\n`ath:Consulter?DEMANDE/{id}`\n\n**Valeurs autorisées :**\n- `source` : EMAIL, TEL, AUTRE\n- `priority` : BASSE, NORMALE, HAUTE, URGENTE\n- `type` : INCIDENT, DEMANDE, EVOLUTION"
+          },
+          "response": [
+            {
+              "name": "200 — Demande créée",
+              "originalRequest": {
+                "method": "POST",
+                "url": { "raw": "{{baseUrl}}/demandes" }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"message\": \"Demande créée\",\n  \"data\": {\n    \"demande_id\": 8851,\n    \"reference\": \"INC-2024-08851\"\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Pièces jointes",
+      "item": [
+        {
+          "name": "POST /pieces-jointes — Enregistrer des pièces jointes",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": [],
+                  "description": "Premier fichier à enregistrer"
+                },
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": [],
+                  "description": "Second fichier (optionnel — répéter la clé 'files' pour chaque fichier supplémentaire)"
+                },
+                {
+                  "key": "to",
+                  "value": "{{conseillerEmail}}",
+                  "type": "text",
+                  "description": "E-mail du destinataire (conseiller ATHENEO connecté)"
+                },
+                {
+                  "key": "from",
+                  "value": "{{clientEmail}}",
+                  "type": "text",
+                  "description": "E-mail de l'expéditeur"
+                },
+                {
+                  "key": "subject",
+                  "value": "Devis n°69392 - documents joints",
+                  "type": "text",
+                  "description": "Objet de l'e-mail d'origine"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pieces-jointes",
+              "host": ["{{baseUrl}}"],
+              "path": ["pieces-jointes"]
+            },
+            "description": "Enregistre une ou plusieurs pièces jointes dans ATHENEO sur le contexte courant du destinataire.\n\n**Pour envoyer plusieurs fichiers :** répéter la clé `files` dans le form-data (une entrée par fichier).\n\n**Flux interne :**\n1. Récupère le module actif du destinataire `to`\n2. Parse le contexte → clé/valeur ATHENEO\n3. Pour chaque fichier : téléverse via WSDocument (SOAP)\n4. Enregistre les métadonnées via `SP_ATHENEO_ENREGISTRER_PIECE_JOINTE`"
+          },
+          "response": [
+            {
+              "name": "200 — Pièces jointes enregistrées",
+              "originalRequest": {
+                "method": "POST",
+                "url": { "raw": "{{baseUrl}}/pieces-jointes" }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"message\": \"2 pièce(s) jointe(s) enregistrée(s)\",\n  \"data\": { \"count\": 2 }\n}"
+            },
+            {
+              "name": "500 — Aucune pièce jointe enregistrée",
+              "originalRequest": {
+                "method": "POST",
+                "url": { "raw": "{{baseUrl}}/pieces-jointes" }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": false,\n  \"message\": \"Aucune pièce jointe n'a pu être enregistrée\",\n  \"data\": null\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
