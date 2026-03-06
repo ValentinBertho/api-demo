@@ -33,7 +33,7 @@ public class AtheneoController {
 
     private final MailService mailService;
     private final InterlocuteurService interlocuteurService;
-    private final fr.mismo.demo_web_addin.service.DemandeService demandeService;
+    private final fr.mismo.demo_web_addin.services.DemandeService demandeService;
     private final PieceJointeService pieceJointeService;
     private final WsDocumentService documentService;
     private final FilesUtil util;

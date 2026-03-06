@@ -10,28 +10,40 @@ GO
 
 Nom de la procedure stockee : SP_ATHENEO_CREER_DEMANDE
 
-No Version : 001
+No Version : 002
 
 Description :
-Cree une nouvelle demande dans la table DEMANDE_P de la base ATHENEO.
-Genere une reference unique au format DEM-YYYY-XXXXX.
-Stocke les informations metier dans les champs libres (C1-C8) de DEMANDE_P :
-  C1 = Titre
-  C2 = Statut
-  C3 = Priorite
-  C4 = Type
-  C5 = Source
-  C6 = Email contact
-  C7 = Nom contact
-  C8 = Reference (DEM-YYYY-XXXXX)
-Retourne l'ID et la reference de la demande creee.
+Cree un nouvel incident dans la table INCIDENT de la base ATHENEO.
+Une "demande" dans le contexte Outlook Add-in correspond a un INCIDENT ATHENEO.
+
+Generation des identifiants :
+  - NO_INCIDENT    : via sp_COMPTEUR (compteur = 'NO_INCIDENT', pas = 1)
+  - CHRONO_INCIDENT: via sp_generation_chrono (type piece, cod_site, no_piece, jour, mois, annee)
+
+Mapping des champs metier :
+  OBJET            = @TITRE
+  MEMO_P           = @DESCRIPTION
+  COD_ETAT         = 'NEW'        (statut initial)
+  COD_PRIORITE     = @PRIORITE
+  NO_SOCIETE       = recupere depuis INTERLOC
+  NO_INTERLO       = @ID_INTERLOCUTEUR
+  CREER_PAR        = @UTILISATEUR
+  MODIF_PAR        = @UTILISATEUR
+  CREER_LE         = GETDATE()
+  MODIF_LE         = GETDATE()
+
+Retourne :
+  @DEMANDE_ID      = NO_INCIDENT genere
+  @REFERENCE       = CHRONO_INCIDENT genere
 
 Procedure appelee par :
 Interface ATHENEO Outlook Add-in.
 
 Historique des mises a jour :
 
-v001 - VABE - 26/02/2026 - Creation
+v002 - VABE - 06/03/2026 - Refactoring : insertion dans INCIDENT
+                           Utilisation de sp_COMPTEUR pour NO_INCIDENT
+                           Utilisation de sp_generation_chrono pour CHRONO_INCIDENT
 
 //////////////////////////////////////////////////////////////////////// */
 
@@ -45,6 +57,7 @@ CREATE PROCEDURE [SP_ATHENEO_CREER_DEMANDE]
     @PRIORITE           varchar(20)     = 'normale',
     @TYPE               varchar(50)     = 'email',
     @UTILISATEUR        varchar(10)     = NULL,
+    @COD_SITE           varchar(10)     = NULL,
     @DEMANDE_ID         int             OUTPUT,
     @REFERENCE          varchar(50)     OUTPUT
 AS
@@ -62,6 +75,7 @@ BEGIN
         @PRIORITE,
         @TYPE,
         @UTILISATEUR,
+        @COD_SITE,
         @DEMANDE_ID OUTPUT,
         @REFERENCE  OUTPUT
 END
@@ -69,72 +83,82 @@ ELSE
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @V_UTILISATEUR  char(10)
-    DECLARE @V_ANNEE        char(4)
-    DECLARE @V_SEQUENCE     int
-    DECLARE @V_REFERENCE    varchar(50)
-    DECLARE @V_NO_SOCIETE   int
+    DECLARE @V_UTILISATEUR      char(10)
+    DECLARE @V_NO_INCIDENT      int
+    DECLARE @V_CHRONO           varchar(50)
+    DECLARE @V_NO_SOCIETE       int
 
-    SET @V_UTILISATEUR = ISNULL(LEFT(@UTILISATEUR, 10), 'OUTLOOK')
-    SET @V_ANNEE       = CAST(YEAR(GETDATE()) AS char(4))
+    -- ──────────────────────────────────────────────────────────
+    -- Normalisation utilisateur
+    -- ──────────────────────────────────────────────────────────
+    SET @V_UTILISATEUR = LEFT(ISNULL(@UTILISATEUR, 'OUTLOOK'), 10)
 
-    -- Recuperation du NO_SOCIETE de l'interlocuteur
+    -- ──────────────────────────────────────────────────────────
+    -- Recuperation du NO_SOCIETE depuis l'interlocuteur
+    -- ──────────────────────────────────────────────────────────
     SELECT @V_NO_SOCIETE = NO_SOCIETE
     FROM INTERLOC
     WHERE NO_INTERLO = @ID_INTERLOCUTEUR
 
-    -- Generation de la reference unique DEM-YYYY-XXXXX
-    SELECT @V_SEQUENCE = ISNULL(MAX(CAST(RIGHT(C8, 5) AS int)), 0) + 1
-    FROM DEMANDE_P
-    WHERE C8 LIKE 'DEM-' + @V_ANNEE + '-%'
-    AND ISNUMERIC(RIGHT(C8, 5)) = 1
+    -- ──────────────────────────────────────────────────────────
+    -- Generation du NO_INCIDENT via sp_COMPTEUR
+    -- (equivalent de AtheneoGenerator.generate avec compteur = 'NO_INCIDENT')
+    -- ──────────────────────────────────────────────────────────
+    EXEC sp_COMPTEUR
+        @CHAMP    = 'NO_INCIDENT',
+        @COMPTEUR = @V_NO_INCIDENT OUTPUT,
+        @PAS      = 1
 
-    SET @V_REFERENCE = 'DEM-' + @V_ANNEE + '-' + RIGHT('00000' + CAST(@V_SEQUENCE AS varchar(5)), 5)
+    -- ──────────────────────────────────────────────────────────
+    -- Generation du CHRONO_INCIDENT via sp_generation_chrono
+    -- (equivalent de AtheneoGenerator.generateChrono)
+    -- ──────────────────────────────────────────────────────────
+    --EXEC sp_generation_chrono
+    --    @TYPE_PIECE = 'INCIDENT',
+    --    @COD_SITE   = @COD_SITE,
+    --    @NO_PIECE   = @V_NO_INCIDENT,
+    --    @JOUR       = CAST(DAY(GETDATE())   AS varchar(2)),
+    --    @MOIS       = CAST(MONTH(GETDATE()) AS varchar(2)),
+    --    @ANNEE      = CAST(YEAR(GETDATE())  AS varchar(4)),
+    --    @CHRONO     = @V_CHRONO OUTPUT
 
-    -- Insertion de la demande
-    INSERT INTO DEMANDE_P (
-        NO_INTERLO,
+    -- ──────────────────────────────────────────────────────────
+    -- Insertion dans INCIDENT
+    -- ──────────────────────────────────────────────────────────
+    INSERT INTO INCIDENT (
+        NO_INCIDENT,
+        OBJET,
+        MEMO_P,
+        COD_ETAT,
+        COD_PRIORITE,
+        -- CHRONO_INCIDENT,
         NO_SOCIETE,
-        DATE_DEMANDE_P,
-        DEMANDE_PAR,
-        MEMO,
+        NO_INTERLO,
         CREER_LE,
         CREER_PAR,
         MODIF_LE,
-        MODIF_PAR,
-        MODIFIABLE,
-        C1,
-        C2,
-        C3,
-        C4,
-        C5,
-        C6,
-        C7,
-        C8
+        MODIF_PAR
     )
     VALUES (
-        @ID_INTERLOCUTEUR,
-        @V_NO_SOCIETE,
-        GETDATE(),
-        @V_UTILISATEUR,
-        @DESCRIPTION,
-        GETDATE(),
-        @V_UTILISATEUR,
-        GETDATE(),
-        @V_UTILISATEUR,
-        1,
-        LEFT(ISNULL(@TITRE, ''), 254),          -- C1 = Titre
-        LEFT(ISNULL('nouvelle', ''), 254),       -- C2 = Statut initial
-        LEFT(ISNULL(@PRIORITE, 'normale'), 254), -- C3 = Priorite
-        LEFT(ISNULL(@TYPE, 'email'), 254),       -- C4 = Type
-        LEFT(ISNULL(@SOURCE, ''), 254),          -- C5 = Source
-        LEFT(ISNULL(@EMAIL_CONTACT, ''), 254),   -- C6 = Email contact
-        LEFT(ISNULL(@CONTACT_NOM, ''), 254),     -- C7 = Nom contact
-        @V_REFERENCE                             -- C8 = Reference
+        @V_NO_INCIDENT,
+        LEFT(ISNULL(@TITRE, ''), 254),              -- OBJET
+        @DESCRIPTION,                               -- MEMO_P
+        'NEW',                                      -- COD_ETAT : statut initial
+        LEFT(ISNULL(@PRIORITE, 'normale'), 20),     -- COD_PRIORITE
+        -- @V_CHRONO,                                  -- CHRONO_INCIDENT
+        @V_NO_SOCIETE,                              -- NO_SOCIETE
+        @ID_INTERLOCUTEUR,                          -- NO_INTERLO
+        GETDATE(),                                  -- CREER_LE
+        @V_UTILISATEUR,                             -- CREER_PAR
+        GETDATE(),                                  -- MODIF_LE
+        @V_UTILISATEUR                              -- MODIF_PAR
     )
 
-    SET @DEMANDE_ID = SCOPE_IDENTITY()
-    SET @REFERENCE  = @V_REFERENCE
+    -- ──────────────────────────────────────────────────────────
+    -- Valeurs de retour
+    -- ──────────────────────────────────────────────────────────
+    SET @DEMANDE_ID = @V_NO_INCIDENT
+    SET @REFERENCE  = @V_CHRONO
 
 END
 GO

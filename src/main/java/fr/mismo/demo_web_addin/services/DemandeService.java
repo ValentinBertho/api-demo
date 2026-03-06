@@ -1,9 +1,6 @@
-package fr.mismo.demo_web_addin.service;
+package fr.mismo.demo_web_addin.services;
 
 import fr.mismo.demo_web_addin.dto.CreateDemandeRequest;
-import fr.mismo.demo_web_addin.projection.DemandeProjection;
-import fr.mismo.demo_web_addin.repository.DemandeRepository;
-import fr.mismo.demo_web_addin.services.InterlocuteurService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Service;
@@ -16,27 +13,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DemandeService {
 
-    private final DemandeRepository repository;
     private final InterlocuteurService interlocuteurService;
     private final DataSource dataSource;
-
-    public List<DemandeProjection> listerDemandes(
-            String statut,
-            String priorite,
-            String type,
-            Long idInterlocuteur,
-            int limite
-    ){
-
-        return repository.listerDemandes(
-                statut,
-                priorite,
-                type,
-                idInterlocuteur,
-                limite
-        );
-
-    }
 
     public Map<String,Object> creerDemande(CreateDemandeRequest request){
 
