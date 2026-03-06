@@ -78,6 +78,12 @@
 			<artifactId>jaxb-runtime</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.14</version>
+		</dependency>
+
 		<!-- JAX-WS API -->
 		<dependency>
 			<groupId>jakarta.xml.ws</groupId>

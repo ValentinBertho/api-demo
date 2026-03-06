@@ -1,10 +1,13 @@
 package fr.mismo.demo_web_addin.util;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Component
 public class ContexteParser {
 
     // Mapping entre le libellé du contexte et la clé ATHENEO

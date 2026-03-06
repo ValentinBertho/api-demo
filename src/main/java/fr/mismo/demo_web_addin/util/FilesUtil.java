@@ -1,5 +1,8 @@
 package fr.mismo.demo_web_addin.util;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class FilesUtil {
 
     public String getFileExtension(String fileName) {

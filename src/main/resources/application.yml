@@ -45,3 +45,14 @@ logging:
     org.hibernate.SQL: WARN
   pattern:
     console: "%d{dd/MM HH:mm:ss} [%-5level] %logger{20} - %msg%n"
+
+wsdocument:
+  defaultUri: http://athsql2.mismo.local:8082/WSDocumentAth/WSDocumentAth.svc #${WSDOC_BASE_URL}
+  login: ADMIN #${WSDOC_LOGIN}
+  password: ADMIN #${WSDOC_PASSWORD}
+  proprietesMail:
+    typeDocument: MAIL
+    auteurDocument: ADDIN
+  proprietesPieceJointe:
+    typeDocument: PJ
+    auteurDocument: ADDIN
